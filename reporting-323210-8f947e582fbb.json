@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "reporting-323210",
+  "private_key_id": "8f947e582fbbd8468a528bcfd22570338af47f5c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3eXMIc/KfM/CB\nuURc4izsQskghdvoOOOcq8JflDhcceNiuf+i134Jd161YVqfmjaz6y/6vzv/uTYm\nQYl1TDvmsxV9WCisdxDe/IV9mM8InVEScO3R/ys9S+BR+/iVMz3HDy2JzA4rZtSt\nKcOltn2MZGRHE3ykXEa6RCzNOS5jRzkZh+ZblPFs+Ut1rkGACpn7J3I6D+E9s8a+\nG43+r6kfMLmvNKxJfgrLyf0ymaKrUuoC2N9IeCqbiVBlq9dBH4QyB0gs3vZreufs\nfSol1LtfHi1vOaoc/C0xCSGtcy/FNzMnECYPtW9twiNClKX39JMOVron1g+56VoL\nQlOlpaHHAgMBAAECggEALg3XwKbuH2U3uTBKhzAky5dGChpfpU5mX+TDUR+Q+C+E\nPrtmfjcuRW0HwmqyBz77/TSLYhsPkfSpMXgg62cb4CBSxBhVeVkXzIlBbtHlIgnv\nGDxtjdlJvsSlhZ7EepsWpjlammy0n9Nbji3eFOIWaJ+ohijPkCgzfrzvLAJu8O86\nhRYAN4ylkMcuVTVdw16u3tA9iQQDAtfgZRu9bmv8XN6OTq94lhpjnwKkQXnFzfa6\nlw08cBXtQkzuxAX7nbwk01sKXIU5Frkid0V/OaXUNUVHEaX41ufNfw1xxU2icpXb\nN9d6sojZqe0nlUWt8dZuuU82EtZH1QWrkiPgJAZf2QKBgQDc6AHoLlDwQkZb8rZJ\nNbyQQ/ltmrKcJa6T7Isr+YDLptHqsoXxdEhsqyOQ+Y8sg/v50UJ4Jw+zWH5HUy95\n+OA5mBKrcfs3wCu7ORWKynXTQlBerdcVz2frdZD0yXEAL80K7qPhUj5AJHO+fLgv\nyjdADubZdaVz+/U137VvnGeljwKBgQDUnyIE2CMA/y0sDoAw3JRDyNs1Rcon2P0k\nPMZxsEFxB6BIP7f2J0ZxvyqpwKN0EJB4MyV6gfyn55dLEhXJTyEZur0Vjxjo/YzT\n4hFJFHBkhSN0Z4+/a0TWpVFt24NkU7swzrVSrO4s2roE58QuihvWi8hPRxh4JbpN\n5PR1TLPUSQKBgQCQcs08a3zVfiDP4ye7O34vv6MMPonofONpKtXeTWogwNam51Ga\nj3UESewZ0nYCn9NWibUzKCemGImKTiTPVyQXxQ8AOKoSzIBMDom9laHyIHy5TGdG\nhbboSpoc1tQjUR58tYtHvSWjf7KHrrop1crHAneFXt5vtyOitMPJVbaYlQKBgDGJ\nhd6FENq5mSerlThNHAoS8Oefg/L2vjvEISP5wbV45mIO3mhuTB5SQLleFXcEKPSo\nTfIV+OyRq5Ek/IhzdC3PcSBlv5MBB9+Ryx8wsOLqlhEX08jwUBCGYctrmlg0nedI\nMby6Z59xsmdULEP/j27UEG5QDSZo+9gMINx3a2ppAoGAQruJhcbNGUem2VSRN+l1\niRmYlBxWMbY69874qm/g86j6pCUbOgvdEJ/6rFbaVaoy9JRfUTSMB1MiKDSP0tqj\nfzLFN3RhHe2iYmYXs9apAUh6jQzGBHwdj+Rfj3VOvGSw/oIUvOfl4bHmz2dALwF7\nCaucrqB9yB+OYhJQMfYxDU0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "api-manager-reporting@reporting-323210.iam.gserviceaccount.com",
+  "client_id": "103764164213788184443",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/api-manager-reporting%40reporting-323210.iam.gserviceaccount.com"
+}
