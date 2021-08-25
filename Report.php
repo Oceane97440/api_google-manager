@@ -69,15 +69,21 @@ class RunSavedQuery
         $reportJob->getId()
     );
 
-    var_dump($reportDownloader);
 
-/*
+
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
+        // $filePath = sprintf(
+        //     '%s.csv.gz',
+        //     tempnam(sys_get_temp_dir(), 'delivery-report-')
+        // );
+        // printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         $filePath = sprintf(
             '%s.csv.gz',
-            tempnam(sys_get_temp_dir(), 'delivery-report-')
+            tempnam(sys_get_temp_dir(), 'api_google-manager')
         );
+        var_dump($filePath);
+
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
         $reportDownloader->downloadReport(
@@ -87,7 +93,7 @@ class RunSavedQuery
         print "done.\n";
     } else {
         print "Report failed.\n";
-    }*/
+    }
 
 
 
