@@ -27,6 +27,8 @@ use Google\AdsApi\AdManager\v202011\SavedQueryPage;
 use Google\AdsApi\AdManager\v202011\SitePage;
 use Google\AdsApi\AdManager\v202011\UserPage;
 use Google\AdsApi\AdManager\v202011\UserTeamAssociationPage;
+use Google\AdsApi\AdManager\v202011\SavedQuery;
+
 //use UnexpectedValueException;
 
 
