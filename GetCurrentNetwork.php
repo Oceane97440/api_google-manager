@@ -28,3 +28,23 @@ printf(
     $network->getNetworkCode(),
     $network->getDisplayName()
 );
+
+
+
+$statementBuilder = (new StatementBuilder())->where('id = 12304979660')
+->orderBy('id ASC')
+->limit(1)
+->withBindVariableValue('id', $savedQueryId);
+
+$savedQueryPage = $reportService->getSavedQueriesByStatement(
+$statementBuilder->toStatement()
+);
+$savedQuery = $savedQueryPage->getResults()[0];
+
+if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
+throw new UnexpectedValueException(
+    'The saved query is not compatible with this API version.'
+);
+}
+
+$reportQuery = $savedQuery->getReportQuery();
