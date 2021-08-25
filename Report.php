@@ -61,39 +61,41 @@ class RunSavedQuery
       $reportJob = $reportService->runReportJob($reportJob);
       var_dump($reportJob);
 
-      var_dump($reportJob->reportQuery);
 
-       /* // Optionally modify the query.
-        $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
-
-        // Create report job using the saved query.
-        $reportJob = new ReportJob();
-        $reportJob->setReportQuery($reportQuery);
-
-        $reportJob = $reportService->runReportJob($reportJob);
-
-        // Create report downloader to poll report's status and download when
-        // ready.
-        $reportDownloader = new ReportDownloader(
-            $reportService,
-            $reportJob->getId()
+  
+      // Create report downloader to poll report's status and download when
+      // ready.
+      $reportDownloader = new ReportDownloader(
+        $reportService,
+        $reportJob->getId()
+    );
+    if ($reportDownloader->waitForReportToFinish()) {
+        // Write to system temp directory by default.
+        $filePath = sprintf(
+            '%s.csv.gz',
+            tempnam(sys_get_temp_dir(), 'delivery-report-')
         );
-        if ($reportDownloader->waitForReportToFinish()) {
-            // Write to system temp directory by default.
-            $filePath = sprintf(
-                '%s.csv.gz',
-                tempnam(sys_get_temp_dir(), 'saved-report-')
-            );
-            printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
-            // Download the report.
-            $reportDownloader->downloadReport(
-                ExportFormat::CSV_DUMP,
-                $filePath
-            );
-            print "done.\n";
-        } else {
-            print "Report failed.\n";
-        }*/
+        printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
+        // Download the report.
+        $reportDownloader->downloadReport(
+            ExportFormat::CSV_DUMP,
+            $filePath
+        );
+        print "done.\n";
+    } else {
+        print "Report failed.\n";
+    }
+
+
+
+    
+  $report = fopen($filePath, 'r');
+  while (!feof($report)) {
+    // Additional row processing
+    processRow(fgetcsv($report));
+  }
+  fclose($report);
+    
     }
 
     public static function main()
