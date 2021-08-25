@@ -61,7 +61,7 @@ class RunSavedQuery
       $reportJob = $reportService->runReportJob($reportJob);
       var_dump($reportJob);
 
-      var_dump($reportJob->dimensions);
+      var_dump($reportJob->reportQuery);
 
        /* // Optionally modify the query.
         $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
