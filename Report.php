@@ -14,7 +14,9 @@ use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use Google\AdsApi\AdManager\v202108\ReportService;
 
-use UnexpectedValueException;
+use Google\AdsApi\AdManager\v202108\SavedQuery;
+
+//use UnexpectedValueException;
 
 /**
  * This example retrieves and runs a saved report query.
