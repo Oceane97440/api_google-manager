@@ -49,9 +49,11 @@ class RunSavedQuery
             throw new UnexpectedValueException(
                 'The saved query is not compatible with this API version.'
             );
+        } else {
+            print "Report failed";
         }
 
-       /// Optionally modify the query.
+       /* // Optionally modify the query.
         $reportQuery = $savedQuery->getReportQuery();
         $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
 
@@ -82,7 +84,7 @@ class RunSavedQuery
             print "done.\n";
         } else {
             print "Report failed.\n";
-        }
+        }*/
     }
 
     public static function main()
