@@ -44,11 +44,10 @@ class RunSavedQuery
             $statementBuilder->toStatement()
         );
         $savedQuery = $savedQueryPage->getResults()[0];
-        print $savedQuery;
 
         if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
             throw new UnexpectedValueException(
-                'The saved query is not compatible with this API version.'
+                print'The saved query is not compatible with this API version.'
             );
         } else {
             print "Report failed";
