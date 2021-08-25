@@ -9,8 +9,24 @@ use Google\AdsApi\AdManager\v202108\ReportJob;
 use Google\AdsApi\AdManager\v202108\ReportQueryAdUnitView;
 use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
-use Google\AdsApi\AdManager\v202108\ActivityGroup;
-use Google\AdsApi\AdManager\v202108\ActivityGroupPage;
+use Google\AdsApi\AdManager\v202011\ActivityGroup;
+use Google\AdsApi\AdManager\v202011\ActivityGroupPage;
+
+use Google\AdsApi\AdManager\v202011\AdExclusionRulePage;
+use Google\AdsApi\AdManager\v202011\AdSpotPage;
+use Google\AdsApi\AdManager\v202011\CdnConfigurationPage;
+use Google\AdsApi\AdManager\v202011\ContentBundlePage;
+use Google\AdsApi\AdManager\v202011\CreativeTemplatePage;
+use Google\AdsApi\AdManager\v202011\CreativeWrapperPage;
+use Google\AdsApi\AdManager\v202011\CustomTargetingKeyPage;
+use Google\AdsApi\AdManager\v202011\ForecastAdjustmentPage;
+use Google\AdsApi\AdManager\v202011\LiveStreamEventPage;
+use Google\AdsApi\AdManager\v202011\MarketplaceCommentPage;
+use Google\AdsApi\AdManager\v202011\PlacementPage;
+use Google\AdsApi\AdManager\v202011\SavedQueryPage;
+use Google\AdsApi\AdManager\v202011\SitePage;
+use Google\AdsApi\AdManager\v202011\UserPage;
+use Google\AdsApi\AdManager\v202011\UserTeamAssociationPage;
 use UnexpectedValueException;
 
 
