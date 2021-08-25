@@ -59,7 +59,6 @@ class RunSavedQuery
       $reportJob = new ReportJob();
       $reportJob->setReportQuery($reportQuery);
       $reportJob = $reportService->runReportJob($reportJob);
-      var_dump($reportJob);
 
 
   
@@ -69,6 +68,10 @@ class RunSavedQuery
         $reportService,
         $reportJob->getId()
     );
+
+    var_dump($reportDownloader);
+
+/*
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
         $filePath = sprintf(
@@ -84,17 +87,17 @@ class RunSavedQuery
         print "done.\n";
     } else {
         print "Report failed.\n";
-    }
+    }*/
 
 
 
-    
-  $report = fopen($filePath, 'r');
-  while (!feof($report)) {
-    // Additional row processing
-    processRow(fgetcsv($report));
-  }
-  fclose($report);
+            
+        $report = fopen($filePath, 'r');
+        while (!feof($report)) {
+            // Additional row processing
+            processRow(fgetcsv($report));
+        }
+        fclose($report);
     
     }
 
