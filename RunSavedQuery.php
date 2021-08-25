@@ -12,7 +12,7 @@ use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use UnexpectedValueException;
 
-/*
+
 $reportService = $serviceFactory->createReportService($session);
 
 $savedQueryId = 12304979660;
@@ -32,12 +32,12 @@ throw new UnexpectedValueException(
 );
 }
 
-$reportQuery = $savedQuery->getReportQuery();*/
+$reportQuery = $savedQuery->getReportQuery();
 
-
+/*
 /**
  * This example retrieves and runs a saved report query.
- */
+ *//*
 class RunSavedQuery
 {
 
@@ -116,4 +116,4 @@ class RunSavedQuery
     }
 }
 
-RunSavedQuery::main();
+RunSavedQuery::main();*/
