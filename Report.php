@@ -54,6 +54,7 @@ class RunSavedQuery
   
         } 
         $reportQuery = $savedQuery->getReportQuery();
+        var_dump($reportQuery);
 
        /* // Optionally modify the query.
         $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
