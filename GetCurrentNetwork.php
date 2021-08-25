@@ -30,8 +30,8 @@ printf(
 );
 
 
-
-$statementBuilder = (new StatementBuilder())->where('id = 12304979660')
+$savedQueryId = 12304979660;
+$statementBuilder = (new StatementBuilder())->where('id = :id')
 ->orderBy('id ASC')
 ->limit(1)
 ->withBindVariableValue('id', $savedQueryId);
