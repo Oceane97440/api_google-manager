@@ -49,6 +49,9 @@ class RunSavedQuery
             throw new UnexpectedValueException(
                print('The saved query is not compatible with this API version.')
             );
+        }else{
+            print('Request ready');
+  
         } 
 
        /* // Optionally modify the query.
