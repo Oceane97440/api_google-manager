@@ -1,6 +1,6 @@
 <?php
 require 'vendor/autoload.php';
-
+use Google\AdsApi\AdManager\v202102\ReportService;
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\AdManager\Util\v202102\ReportDownloader;
