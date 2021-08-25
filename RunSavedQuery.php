@@ -12,7 +12,7 @@ use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use UnexpectedValueException;
 
-
+$serviceFactory = new ServiceFactory();
 $reportService = $serviceFactory->createReportService($session);
 
 $savedQueryId = 12304979660;
