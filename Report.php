@@ -51,7 +51,7 @@ class RunSavedQuery
             );
         }
 
-       /* // Optionally modify the query.
+       /// Optionally modify the query.
         $reportQuery = $savedQuery->getReportQuery();
         $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
 
@@ -82,7 +82,7 @@ class RunSavedQuery
             print "done.\n";
         } else {
             print "Report failed.\n";
-        }*/
+        }
     }
 
     public static function main()
