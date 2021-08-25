@@ -25,7 +25,7 @@ use Google\AdsApi\AdManager\v202011\SavedQuery;
 class RunSavedQuery
 {
 
-    const SAVED_QUERY_ID = '2895370071';
+    const SAVED_QUERY_ID = '12304979660';
 
     public static function runExample(
         ServiceFactory $serviceFactory,
@@ -43,7 +43,7 @@ class RunSavedQuery
         $savedQueryPage = $reportService->getSavedQueriesByStatement(
             $statementBuilder->toStatement()
         );
-        $savedQuery = $savedQueryPage->getResults();
+        $savedQuery = $savedQueryPage->getResults()[0];
 
         if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
             throw new UnexpectedValueException(
