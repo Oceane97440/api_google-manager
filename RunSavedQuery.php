@@ -12,6 +12,10 @@ use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use UnexpectedValueException;
 
+// Generate a refreshable OAuth2 credential for authentication.
+$oAuth2Credential = (new OAuth2TokenBuilder())
+    ->fromFile()
+    ->build();
 
 $session = (new AdManagerSessionBuilder())
     ->fromFile()
