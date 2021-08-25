@@ -1,14 +1,14 @@
 <?php
 require 'vendor/autoload.php';
-use Google\AdsApi\AdManager\v202102\ReportService;
+use Google\AdsApi\AdManager\v202108\ReportService;
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
-use Google\AdsApi\AdManager\Util\v202102\ReportDownloader;
-use Google\AdsApi\AdManager\Util\v202102\StatementBuilder;
-use Google\AdsApi\AdManager\v202102\ExportFormat;
-use Google\AdsApi\AdManager\v202102\ReportJob;
-use Google\AdsApi\AdManager\v202102\ReportQueryAdUnitView;
-use Google\AdsApi\AdManager\v202102\ServiceFactory;
+use Google\AdsApi\AdManager\Util\v202108\ReportDownloader;
+use Google\AdsApi\AdManager\Util\v202108\StatementBuilder;
+use Google\AdsApi\AdManager\v202108\ExportFormat;
+use Google\AdsApi\AdManager\v202108\ReportJob;
+use Google\AdsApi\AdManager\v202108\ReportQueryAdUnitView;
+use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use UnexpectedValueException;
 
