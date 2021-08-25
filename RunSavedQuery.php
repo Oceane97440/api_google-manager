@@ -9,7 +9,11 @@ use Google\AdsApi\AdManager\v202108\ReportJob;
 use Google\AdsApi\AdManager\v202108\ReportQueryAdUnitView;
 use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
+use Google\AdsApi\AdManager\v202108\ActivityGroup;
+use Google\AdsApi\AdManager\v202108\ActivityGroupPage;
 use UnexpectedValueException;
+
+
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
