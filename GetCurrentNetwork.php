@@ -6,6 +6,13 @@ use Google\AdsApi\AdManager\v202108\ApiException;
 use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 
+use Google\AdsApi\AdManager\Util\v202108\ReportDownloader;
+use Google\AdsApi\AdManager\Util\v202108\StatementBuilder;
+use Google\AdsApi\AdManager\v202108\ExportFormat;
+use Google\AdsApi\AdManager\v202108\ReportJob;
+use Google\AdsApi\AdManager\v202108\ReportQueryAdUnitView;
+use UnexpectedValueException;
+
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
     ->fromFile()
