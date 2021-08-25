@@ -96,14 +96,6 @@ class RunSavedQuery
     }
 
 
-
-            
-        $report = fopen($filePath, 'r');
-        while (!feof($report)) {
-            // Additional row processing
-            processRow(fgetcsv($report));
-        }
-        fclose($report);
     
     }
 
