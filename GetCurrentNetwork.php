@@ -37,25 +37,3 @@ printf(
 );
 
 
-
-
-$reportService = $serviceFactory->createReportService($session);
-
-$savedQueryId = 12304979660;
-$statementBuilder = (new StatementBuilder())->where('id = :id')
-->orderBy('id ASC')
-->limit(1)
-->withBindVariableValue('id', $savedQueryId);
-
-$savedQueryPage = $reportService->getSavedQueriesByStatement(
-$statementBuilder->toStatement()
-);
-$savedQuery = $savedQueryPage->getResults()[0];
-
-if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
-throw new UnexpectedValueException(
-    'The saved query is not compatible with this API version.'
-);
-}
-
-$reportQuery = $savedQuery->getReportQuery();
