@@ -47,11 +47,9 @@ class RunSavedQuery
 
         if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
             throw new UnexpectedValueException(
-                print'The saved query is not compatible with this API version.'
+                'The saved query is not compatible with this API version.'
             );
-        } else {
-            print "Report failed";
-        }
+        } 
 
        /* // Optionally modify the query.
         $reportQuery = $savedQuery->getReportQuery();
