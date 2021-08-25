@@ -28,7 +28,7 @@ $session = (new AdManagerSessionBuilder())
 $serviceFactory = new ServiceFactory();
 $reportService = $serviceFactory->createReportService($session);
 
-$savedQueryId = 12304979660;
+$savedQueryId = '12304979660';
 $statementBuilder = (new StatementBuilder())->where('id = :id')
 ->orderBy('id ASC')
 ->limit(1)
