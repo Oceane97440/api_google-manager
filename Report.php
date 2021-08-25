@@ -41,7 +41,7 @@ class RunSavedQuery
         $savedQueryPage = $reportService->getSavedQueriesByStatement(
             $statementBuilder->toStatement()
         );
-        $savedQuery = $savedQueryPage->getResults()[0];
+        $savedQuery = $savedQueryPage->getResults();
 
         if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
             throw new UnexpectedValueException(
