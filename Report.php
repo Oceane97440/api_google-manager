@@ -44,6 +44,7 @@ class RunSavedQuery
             $statementBuilder->toStatement()
         );
         $savedQuery = $savedQueryPage->getResults()[0];
+        print $savedQuery;
 
         if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
             throw new UnexpectedValueException(
