@@ -54,7 +54,12 @@ class RunSavedQuery
   
         } 
         $reportQuery = $savedQuery->getReportQuery();
-        var_dump($reportQuery);
+
+        // Create report job and start it.
+      $reportJob = new ReportJob();
+      $reportJob->setReportQuery($reportQuery);
+      $reportJob = $reportService->runReportJob($reportJob);
+      var_dump($reportJob);
 
        /* // Optionally modify the query.
         $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
