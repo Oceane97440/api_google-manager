@@ -82,7 +82,7 @@ class RunSavedQuery
             '%s.csv.gz',
             tempnam(sys_get_temp_dir(), 'api_google-manager')
         );
-        var_dump($filePath);
+        print($filePath);
 
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
