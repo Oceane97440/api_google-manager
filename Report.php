@@ -59,7 +59,7 @@ class RunSavedQuery
       $reportJob = new ReportJob();
       $reportJob->setReportQuery($reportQuery);
       $reportJob = $reportService->runReportJob($reportJob);
-      var_dump($reportJob);
+      var_dump(key($reportJob));
 
        /* // Optionally modify the query.
         $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
