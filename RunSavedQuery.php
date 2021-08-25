@@ -12,6 +12,12 @@ use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use UnexpectedValueException;
 
+
+$session = (new AdManagerSessionBuilder())
+    ->fromFile()
+    ->withOAuth2Credential($oAuth2Credential)
+    ->build();
+
 $serviceFactory = new ServiceFactory();
 $reportService = $serviceFactory->createReportService($session);
 
