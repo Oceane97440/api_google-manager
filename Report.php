@@ -19,6 +19,7 @@ use UnexpectedValueException;
 /**
  * This example retrieves and runs a saved report query.
  */
+
 class RunSavedQuery
 {
 
@@ -48,6 +49,53 @@ class RunSavedQuery
             );
         }
 
-}}
+       /* // Optionally modify the query.
+        $reportQuery = $savedQuery->getReportQuery();
+        $reportQuery->setAdUnitView(ReportQueryAdUnitView::HIERARCHICAL);
+
+        // Create report job using the saved query.
+        $reportJob = new ReportJob();
+        $reportJob->setReportQuery($reportQuery);
+
+        $reportJob = $reportService->runReportJob($reportJob);
+
+        // Create report downloader to poll report's status and download when
+        // ready.
+        $reportDownloader = new ReportDownloader(
+            $reportService,
+            $reportJob->getId()
+        );
+        if ($reportDownloader->waitForReportToFinish()) {
+            // Write to system temp directory by default.
+            $filePath = sprintf(
+                '%s.csv.gz',
+                tempnam(sys_get_temp_dir(), 'saved-report-')
+            );
+            printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
+            // Download the report.
+            $reportDownloader->downloadReport(
+                ExportFormat::CSV_DUMP,
+                $filePath
+            );
+            print "done.\n";
+        } else {
+            print "Report failed.\n";
+        }*/
+    }
+
+    public static function main()
+    {
+        $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()
+            ->build();
+        $session = (new AdManagerSessionBuilder())->fromFile()
+            ->withOAuth2Credential($oAuth2Credential)
+            ->build();
+        self::runExample(
+            new ServiceFactory(),
+            $session,
+            intval(self::SAVED_QUERY_ID)
+        );
+    }
+}
 
 RunSavedQuery::main();
