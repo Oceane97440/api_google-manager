@@ -37,6 +37,10 @@ printf(
 );
 
 
+
+
+$reportService = $serviceFactory->createReportService($session);
+
 $savedQueryId = 12304979660;
 $statementBuilder = (new StatementBuilder())->where('id = :id')
 ->orderBy('id ASC')
