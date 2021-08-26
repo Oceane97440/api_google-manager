@@ -97,6 +97,8 @@ class RunSavedQuery
             ExportFormat::CSV_DUMP,
             $filePath
         );
+
+        return $reportDownloader;
         print "done.\n";
     } else {
         print "Report failed.\n";
