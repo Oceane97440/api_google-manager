@@ -83,12 +83,14 @@ class RunSavedQuery
         $reportJob->getId()
     );
 
-    var_dump($reportDownloader);  
 
-/*
-    if (!$reportDownloader->waitForReportToFinish()) {
 
-    }*/
+    if ($reportDownloader->waitForReportToFinish()) {
+        var_dump($reportDownloader);  
+
+    }else{
+        print("Soule a mwin");
+    }
 
 
     
