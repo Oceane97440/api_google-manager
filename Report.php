@@ -62,6 +62,7 @@ class RunSavedQuery
 
 
   
+      var_dump($reportJob);
       // Create report downloader to poll report's status and download when
       // ready.
       $reportDownloader = new ReportDownloader(
