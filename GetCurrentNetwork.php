@@ -86,17 +86,21 @@ class RunSavedQuery
 
 
     if ($reportDownloader->waitForReportToFinish()) {
-       $filePath = sprintf(
+        // Write to system temp directory by default.
+        $filePath = sprintf(
             '%s.csv.gz',
             tempnam(sys_get_temp_dir(), 'delivery-report-')
         );
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
-       
-        var_dump($reportDownloader);
-
-
+        // Download the report.
+        $reportDownloader->downloadReport(
+            ExportFormat::CSV_DUMP,
+            $filePath
+        );
+        print "done.\n";
+    } else {
+        print "Report failed.\n";
     }
-
 
     
     }
