@@ -71,7 +71,7 @@ class RunSavedQuery
     );
 
 
-
+/*
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
         // $filePath = sprintf(
@@ -94,7 +94,7 @@ class RunSavedQuery
         print "done.\n";
     } else {
         print "Report failed.\n";
-    }
+    }*/
 
 
     
