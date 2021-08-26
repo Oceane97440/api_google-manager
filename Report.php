@@ -70,9 +70,9 @@ class RunSavedQuery
     );
 
 
-var_dump($reportDownloader);
-    if ($reportDownloader->waitForReportToFinish()) {
-        
+
+    if (!$reportDownloader->waitForReportToFinish()) {
+      var_dump($reportDownloader);  
 
         // Write to system temp directory by default.
         // $filePath = sprintf(
