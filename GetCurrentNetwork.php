@@ -86,10 +86,15 @@ class RunSavedQuery
 
 
     if ($reportDownloader->waitForReportToFinish()) {
-        var_dump($reportDownloader);  
+       $filePath = sprintf(
+            '%s.csv.gz',
+            tempnam(sys_get_temp_dir(), 'delivery-report-')
+        );
+        printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
+       
+        var_dump($reportDownloader);
 
-    }else{
-        print("Soule a mwin");
+
     }
 
 
