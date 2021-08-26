@@ -62,7 +62,6 @@ class RunSavedQuery
 
 
   
-      var_dump($reportJob);
       // Create report downloader to poll report's status and download when
       // ready.
       $reportDownloader = new ReportDownloader(
@@ -71,15 +70,17 @@ class RunSavedQuery
     );
 
 
-/*
+
     if ($reportDownloader->waitForReportToFinish()) {
+        var_dump($reportDownloader->waitForReportToFinish());
+
         // Write to system temp directory by default.
         // $filePath = sprintf(
         //     '%s.csv.gz',
         //     tempnam(sys_get_temp_dir(), 'delivery-report-')
         // );
         // printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
-        $filePath = sprintf(
+        /*$filePath = sprintf(
             '%s.csv.gz',
             tempnam(sys_get_temp_dir(), 'api_google-manager')
         );
@@ -93,8 +94,8 @@ class RunSavedQuery
         );
         print "done.\n";
     } else {
-        print "Report failed.\n";
-    }*/
+        print "Report failed.\n";*/
+    }
 
 
     
