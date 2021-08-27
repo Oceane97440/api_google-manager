@@ -92,19 +92,13 @@ class RunSavedQuery
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
 
-       /* $filePath = sprintf(
-            '%s.csv.gz',
-            tempnam(sys_get_temp_dir(), 'delivery-report-')
-        );*/
     
         $filePath = sprintf(
             'csv.gz',
             rename('C:/wamp64/www/api_google-manager/csv.gz','C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz')
         );
         
-        // rename('C:/Windows/Temp/del70CF.tmp.csv.gz', "C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz");
          
-    
 
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
@@ -131,11 +125,15 @@ class RunSavedQuery
         $fileName= 'C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz';
         $zp = gzopen($fileName, "r");
         echo gzread($zp, 3);
-        // output until end of the file and close it.
         gzpassthru($zp);
         gzclose($zp);
 
 
+        /*$zip = new ZipArchive;
+        $res = $zip->open('C:/wamp64/www/api_google-manager/report.zip');
+        $zip->extractTo('C:/wamp64/www/api_google-manager');
+        $zip->close();*/
+  
 
     } else {
         print "Report failed.\n";
