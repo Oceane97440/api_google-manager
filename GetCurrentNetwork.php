@@ -97,9 +97,6 @@ class RunSavedQuery
             tempnam(sys_get_temp_dir(), 'delivery-report-')
         );*/
     
-       //$filePath = 'csv.gz';
-        //rename('C:/wamp64/www/api_google-manager/csv.gz','C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz');
-
         $filePath = sprintf(
             'csv.gz',
             rename('C:/wamp64/www/api_google-manager/csv.gz','C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz')
@@ -107,8 +104,6 @@ class RunSavedQuery
         
         // rename('C:/Windows/Temp/del70CF.tmp.csv.gz', "C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz");
          
-
-
     
 
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
@@ -120,23 +115,33 @@ class RunSavedQuery
 
         print "done.\n";
 
-        // mkdir("taskid", 0700);
         
         $path = 'taskId/'.date('Y/m/d/H');
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
 
-        $handle = fopen($filePath, "r");
+     
+       /* $handle = fopen($filePath, "r");
         $data = fgetcsv($handle);
-    
-        var_dump($data);
+        var_dump($data);*/
+
+        
+        // open file for reading
+        $fileName= 'C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz';
+        $zp = gzopen($fileName, "r");
+        echo gzread($zp, 3);
+        // output until end of the file and close it.
+        gzpassthru($zp);
+        gzclose($zp);
+
 
 
     } else {
         print "Report failed.\n";
     }
 
+    
     
     }
 
