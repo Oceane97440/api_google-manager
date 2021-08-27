@@ -1,4 +1,7 @@
 <?php
+ini_set('max_execution_time', 0);
+
+
 require 'vendor/autoload.php';
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
@@ -45,7 +48,8 @@ class RunSavedQuery
         ServiceFactory $serviceFactory,
         AdManagerSession $session,
         int $savedQueryId
-    ) {
+    ) 
+    {
         $reportService = $serviceFactory->createReportService($session);
 
         // Create statement to retrieve the saved query.
@@ -87,10 +91,26 @@ class RunSavedQuery
 
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
-        $filePath = sprintf(
+
+       /* $filePath = sprintf(
             '%s.csv.gz',
             tempnam(sys_get_temp_dir(), 'delivery-report-')
+        );*/
+    
+       //$filePath = 'csv.gz';
+        //rename('C:/wamp64/www/api_google-manager/csv.gz','C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz');
+
+        $filePath = sprintf(
+            'csv.gz',
+            rename('C:/wamp64/www/api_google-manager/csv.gz','C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz')
         );
+        
+        // rename('C:/Windows/Temp/del70CF.tmp.csv.gz', "C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz");
+         
+
+
+    
+
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
         $reportDownloader->downloadReport(
@@ -98,8 +118,21 @@ class RunSavedQuery
             $filePath
         );
 
-        return $reportDownloader;
         print "done.\n";
+
+        // mkdir("taskid", 0700);
+        
+        $path = 'taskId/'.date('Y/m/d/H');
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $handle = fopen($filePath, "r");
+        $data = fgetcsv($handle);
+    
+        var_dump($data);
+
+
     } else {
         print "Report failed.\n";
     }
