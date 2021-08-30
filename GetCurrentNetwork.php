@@ -33,11 +33,11 @@ $networkService = $serviceFactory->createNetworkService($session);
 
 // Make a request
 $network = $networkService->getCurrentNetwork();
-printf(
+/*printf(
     "Network with code %d and display name '%s' was found.\n",
     $network->getNetworkCode(),
     $network->getDisplayName()
-);
+);*/
 
 class RunSavedQuery
 {
@@ -68,7 +68,7 @@ class RunSavedQuery
                print('The saved query is not compatible with this API version.')
             );
         }else{
-            print('Request ready');
+          //  print('Request ready');
   
         } 
         $reportQuery = $savedQuery->getReportQuery();
@@ -94,14 +94,14 @@ class RunSavedQuery
 
         $filePath = sprintf('file.csv.gz');
 
-        printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
+       // printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
         $reportDownloader->downloadReport(
             ExportFormat::CSV_DUMP,
             $filePath
         );
 
-        print "done.\n";
+       // print "done.\n";
 
         
         $path = 'taskId/'.date('Y/m/d/H');
@@ -151,10 +151,24 @@ class RunSavedQuery
         if (file_exists($file_csv)) {
             $handle = fopen($file_csv, "r");
             $data = fgetcsv($handle);
-            var_dump($data);  
+          //  var_dump($data);  
             //renvoi la data en json     
-            echo json_encode($data);
- 
+            // echo json_encode($data);
+
+
+            function read($csv){
+                $file = fopen($csv, 'r');
+                while (!feof($file) ) {
+                    $line[] = fgetcsv($file, 1024);
+                }
+                fclose($file);
+                return $line;
+            }
+            // Définir le chemin d'accès au fichier CSV
+            $csv = $file_csv;
+            $csv = read($csv);
+            echo json_encode($csv);
+
         }
 
    
