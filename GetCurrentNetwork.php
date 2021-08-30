@@ -95,7 +95,7 @@ class RunSavedQuery
     
         $filePath = sprintf(
             'csv.gz',
-            rename('C:/wamp64/www/api_google-manager/csv.gz','C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz')
+            rename('./csv.gz','./taskId/my_file.csv.gz')
         );
         
          
@@ -122,7 +122,9 @@ class RunSavedQuery
 
         
         // open file for reading
-        $file_name= 'C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz';
+        // $file_name= 'C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz';
+        $file_name= './taskId/my_file.csv.gz';
+
         $zp = gzopen($file_name, "r");
         echo gzread($zp, 3);
         gzpassthru($zp);
