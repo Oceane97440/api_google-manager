@@ -92,13 +92,7 @@ class RunSavedQuery
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
 
-    
-        $filePath = sprintf(
-            'csv.gz',
-            rename('./csv.gz','./taskId/my_file.csv.gz')
-        );
-        
-         
+        $filePath = sprintf('file.csv.gz');
 
         printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
@@ -115,25 +109,9 @@ class RunSavedQuery
             mkdir($path, 0777, true);
         }
 
-     
-       /* $handle = fopen($filePath, "r");
-        $data = fgetcsv($handle);
-        var_dump($data);*/
+        $file_name='./file.csv.gz';
 
-        
-        // open file for reading
-        // $file_name= 'C:/wamp64/www/api_google-manager/taskId/my_file.csv.gz';
-        $file_name= './taskId/my_file.csv.gz';
-
-        $zp = gzopen($file_name, "r");
-        echo gzread($zp, 3);
-        gzpassthru($zp);
-        gzclose($zp);
-
-
-
-        //This input should be from somewhere else, hard-coded in this example
-
+        //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
         $buffer_size = 4096; //read 4kb at a time
         $out_file_name = str_replace('.gz', '', $file_name);
@@ -144,8 +122,6 @@ class RunSavedQuery
 
         //Keep repeating until the end of the input file
         while(!gzeof($file)) {
-            //Read buffer-size bytes
-            //Both fwrite and gzread and binary-safe
             fwrite($out_file, gzread($file, $buffer_size));
         }
 
@@ -154,18 +130,32 @@ class RunSavedQuery
         gzclose($file);
 
 
+        $file_exist = './file.csv';
+        if (file_exists($file_exist)) {
 
-        /*$zip = new ZipArchive;
-        $res = $zip->open('C:/wamp64/www/api_google-manager/report.zip');
-        $zip->extractTo('C:/wamp64/www/api_google-manager');
-        $zip->close();*/
+        rename('./file.csv','./taskId/file.csv');
+        unlink('./file.csv.gz');
+
+
+        }
+
+     
   
 
     } else {
         print "Report failed.\n";
     }
 
-    
+         $file_csv='./taskId/file.csv';
+
+        if (file_exists($file_csv)) {
+            $handle = fopen($file_csv, "r");
+            $data = fgetcsv($handle);
+            var_dump($data);        
+        }
+
+   
+
     
     }
 
