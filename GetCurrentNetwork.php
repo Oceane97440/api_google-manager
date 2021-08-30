@@ -151,7 +151,10 @@ class RunSavedQuery
         if (file_exists($file_csv)) {
             $handle = fopen($file_csv, "r");
             $data = fgetcsv($handle);
-            var_dump($data);        
+            var_dump($data);  
+            //renvoi la data en json     
+            echo json_encode($data);
+ 
         }
 
    
