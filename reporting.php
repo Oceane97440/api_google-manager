@@ -14,7 +14,13 @@ use Google\AdsApi\AdManager\Util\v202108\StatementBuilder;
 use Google\AdsApi\AdManager\v202108\ExportFormat;
 use Google\AdsApi\AdManager\v202108\ReportJob;
 use Google\AdsApi\AdManager\v202108\ReportQueryAdUnitView;
-//use UnexpectedValueException;
+
+
+use Google\AdsApi\AdManager\v202108\Column;
+use Google\AdsApi\AdManager\v202108\DateRangeType;
+use Google\AdsApi\AdManager\v202108\Dimension;
+use Google\AdsApi\AdManager\v202108\DimensionAttribute;
+use Google\AdsApi\AdManager\v202108\ReportQuery;
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
