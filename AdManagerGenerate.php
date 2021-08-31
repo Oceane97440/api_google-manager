@@ -54,13 +54,10 @@ $network = $networkService->getCurrentNetwork();
 class RunSavedQuery
 {
 
-    //campagne_id de google ad manager
-    const ORDER_ID = '2877877606';
 
     public static function runExample(
         ServiceFactory $serviceFactory,
-        AdManagerSession $session,
-        int $orderId
+        AdManagerSession $session
     ) 
     {
         $reportService = $serviceFactory->createReportService($session);
@@ -71,18 +68,7 @@ class RunSavedQuery
             [
                 Dimension::ORDER_ID,
                 Dimension::ORDER_NAME,
-                //format id format_name
-                Dimension::PLACEMENT_ID,
-                Dimension::PLACEMENT_NAME,
-                //recupération data creative 
-                Dimension::CREATIVE_ID,
-                Dimension::CREATIVE_NAME,
-                Dimension::CREATIVE_TYPE,
-                Dimension::CREATIVE_SIZE,
-
-                
-
-
+  
             ]
         );
         $reportQuery->setDimensionAttributes(
@@ -94,47 +80,16 @@ class RunSavedQuery
         $reportQuery->setColumns(
             [
                 Column::AD_SERVER_IMPRESSIONS,
-                Column::AD_SERVER_CLICKS,
-                Column::AD_SERVER_CTR,
 
             ]
         );
 
-            // Create statement to filter for an order.
-            $statementBuilder = (new StatementBuilder())
-            ->where('ORDER_ID = :orderId')
-            ->withBindVariableValue(
-                'orderId',
-                $orderId
-            );
-  
-          // Set the filter statement.
-        $reportQuery->setStatement($statementBuilder->toStatement());
+      
+        $reportQuery->setDateRangeType(DateRangeType::TODAY);
 
-       // var_dump($reportQuery);
+        //var_dump($reportQuery);
 
-            // Set the start and end dates or choose a dynamic date range type.
-            $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
-               $reportQuery->setStartDate(
-                AdManagerDateTimes::fromDateTime(
-                       new DateTime(
-                           '-10 days'//,
-                          // new DateTimeZone('America/New_York')
-                       )
-                   )
-                       ->getDate()
-               );
-               $reportQuery->setEndDate(
-                AdManagerDateTimes::fromDateTime(
-                       new DateTime(
-                           'now'//,
-                          // new DateTimeZone('America/New_York')
-                       )
-                   )
-                       ->getDate()
-               );
         
-
         // Create report job and start it.
       $reportJob = new ReportJob();
       $reportJob->setReportQuery($reportQuery);
@@ -249,8 +204,7 @@ class RunSavedQuery
             ->build();
         self::runExample(
             new ServiceFactory(),
-            $session,
-            intval(self::ORDER_ID)
+            $session
         );
     }
 }
