@@ -1,4 +1,7 @@
 <?php
+ini_set('max_execution_time', 0);
+
+
 require 'vendor/autoload.php';
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
@@ -11,7 +14,7 @@ use Google\AdsApi\AdManager\Util\v202108\StatementBuilder;
 use Google\AdsApi\AdManager\v202108\ExportFormat;
 use Google\AdsApi\AdManager\v202108\ReportJob;
 use Google\AdsApi\AdManager\v202108\ReportQueryAdUnitView;
-//use UnexpectedValueException;
+// use UnexpectedValueException;
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
@@ -45,7 +48,8 @@ class RunSavedQuery
         ServiceFactory $serviceFactory,
         AdManagerSession $session,
         int $savedQueryId
-    ) {
+    ) 
+    {
         $reportService = $serviceFactory->createReportService($session);
 
         // Create statement to retrieve the saved query.
@@ -98,8 +102,30 @@ class RunSavedQuery
             $filePath
         );
 
-        return $reportDownloader;
         print "done.\n";
+
+
+        $row = 1;
+        if (($handle = fopen($filePath, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                echo "<p> $num champs à la ligne $row: <br /></p>\n";
+                $row++;
+                for ($c=0; $c < $num; $c++) {
+                    echo $data[$c] . "<br />\n";
+                }
+            }
+            fclose($handle);
+        }
+
+
+        /*
+        $handle = fopen($filePath, "r");
+        $data = fgetcsv($handle);
+    
+        var_dump($data);
+        */
+
     } else {
         print "Report failed.\n";
     }
