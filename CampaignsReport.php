@@ -182,16 +182,38 @@ while ($donnees = $req->fetch())
 
         rename($file_exist,'./taskId/file-'.$campaign_admanager_name.'.csv');
         unlink($file_name);
+        }
+/*
+        $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
+        $handle = fopen($file_csv, "r");
+        $data = fgetcsv($handle);
+      //  var_dump($data);  
+        //renvoi la data en json     
+        // echo json_encode($data);
+
+
+        function read($csv){
+            $file = fopen($csv, 'r');
+            while (!feof($file) ) {
+                $line[] = fgetcsv($file, 1024);
+            }
+            fclose($file);
+            return $line;
+        }
+        // Définir le chemin d'accès au fichier CSV
+        $csv = $file_csv;
+        $csv = read($csv);
+        echo json_encode($csv);
 
 
         }
-
+*/
      
   
 
     } 
 
-      /*  $file_csv='./taskId/file-'.$campaign_admanager_id.'.csv';
+     /*  $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
 
         if (file_exists($file_csv)) {
             $handle = fopen($file_csv, "r");
@@ -214,12 +236,12 @@ while ($donnees = $req->fetch())
             $csv = read($csv);
             echo json_encode($csv);
 
-        }
+        }*/
 
 
 
 
-*/
+
 
 
 
@@ -233,7 +255,7 @@ while ($donnees = $req->fetch())
   
 
 }
-// $req->closeCursor(); // Termine le traitement de la requête
+ $req->closeCursor(); // Termine le traitement de la requête
 
 
 
