@@ -61,12 +61,16 @@ while ($donnees = $req->fetch())
 
     $campaign_admanager_exist=$req_admanager->fetch();
     $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
+    $campaign_admanager_id = $campaign_admanager_exist['advertiser_admanager_id'];
+
 
     //si sa existe on crée les rapport pour les campagnes trouvées
     if($admanagerexist==1)
     {
 
         echo $campaign_admanager_name;
+        echo $campaign_admanager_id;
+
         $reportService = $serviceFactory->createReportService($session);
 
         $reportQuery = new ReportQuery();
@@ -110,123 +114,13 @@ while ($donnees = $req->fetch())
         $reportJob->getId()
     );
 
-          var_dump($reportDownloader);
-
-    
-    }
-
-}
-$req->closeCursor(); // Termine le traitement de la requête
 
 
-
-    
-
-
-/*
-    //campagne_id de google ad manager
-    const ORDER_NAME = 'CANAL CBOX - 70063';
-
-    public static function runExample(
-        ServiceFactory $serviceFactory,
-        AdManagerSession $session
-        //int $orderId
-    ) 
-    {
-        $reportService = $serviceFactory->createReportService($session);
-
-        // Create report query.
-        $reportQuery = new ReportQuery();
-        $reportQuery->setDimensions(
-            [
-                Dimension::ORDER_ID,
-                Dimension::ORDER_NAME,
-                //format id format_name
-                Dimension::PLACEMENT_ID,
-                Dimension::PLACEMENT_NAME,
-                //recupération data creative 
-                Dimension::CREATIVE_ID,
-                Dimension::CREATIVE_NAME,
-                Dimension::CREATIVE_TYPE,
-                Dimension::CREATIVE_SIZE,
-
-                
-
-
-            ]
-        );
-        $reportQuery->setDimensionAttributes(
-            [
-                DimensionAttribute::ORDER_START_DATE_TIME,
-                DimensionAttribute::ORDER_END_DATE_TIME
-            ]
-        );
-        $reportQuery->setColumns(
-            [
-                Column::AD_SERVER_IMPRESSIONS,
-                Column::AD_SERVER_CLICKS,
-                Column::AD_SERVER_CTR,
-
-            ]
-        );
-
-            // Create statement to filter for an order.
-            $statementBuilder = (new StatementBuilder())
-            ->where('ORDER_NAME = :orderName')
-            ->withBindVariableValue(
-                'orderName',
-                'CANAL CBOX - 70063'
-            );
-  
-          // Set the filter statement.
-        $reportQuery->setStatement($statementBuilder->toStatement());
-
-       // var_dump($reportQuery);
-
-            // Set the start and end dates or choose a dynamic date range type.
-            $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
-               $reportQuery->setStartDate(
-                AdManagerDateTimes::fromDateTime(
-                       new DateTime(
-                           '-10 days'//,
-                          // new DateTimeZone('America/New_York')
-                       )
-                   )
-                       ->getDate()
-               );
-               $reportQuery->setEndDate(
-                AdManagerDateTimes::fromDateTime(
-                       new DateTime(
-                           'now'//,
-                          // new DateTimeZone('America/New_York')
-                       )
-                   )
-                       ->getDate()
-               );
-        
-
-        // Create report job and start it.
-      $reportJob = new ReportJob();
-      $reportJob->setReportQuery($reportQuery);
-      $reportJob = $reportService->runReportJob($reportJob);
-
-
-      //var_dump($reportJob);
-  
-      // Create report downloader to poll report's status and download when
-      // ready.
-      $reportDownloader = new ReportDownloader(
-        $reportService,
-        $reportJob->getId()
-    );
-
-   // var_dump($reportDownloader);
-
-
+          
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
-
-        $filePath = sprintf('file.csv.gz');
+        
+        $filePath = sprintf('file-'.$campaign_admanager_id.'.csv.gz');
 
        // printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
@@ -238,12 +132,12 @@ $req->closeCursor(); // Termine le traitement de la requête
        // print "done.\n";
 
         
-        $path = 'taskId/'.date('Y/m/d/H');
+       /*$path = 'taskId/'.date('Y/m/d/H');
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
-        }
+        }*/
 
-        $file_name='./file.csv.gz';
+        $file_name='./file-'.$campaign_admanager_id.'.csv.gz';
 
         //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
@@ -264,11 +158,18 @@ $req->closeCursor(); // Termine le traitement de la requête
         gzclose($file);
 
 
-        $file_exist = './file.csv';
+        $file_exist = './file-'.$campaign_admanager_id.'.csv';
+
+
+        /*$mydate=getdate(date('U'));
+        $YEAR=$mydate[year];
+        $MONTH=$mydate[mon];
+        $DAY=$mydate[mday];*/
+
         if (file_exists($file_exist)) {
 
-        rename('./file.csv','./taskId/file.csv');
-        unlink('./file.csv.gz');
+        rename($file_exist,'./taskId/file-'.$campaign_admanager_id.'.csv');
+        unlink($file_name);
 
 
         }
@@ -280,7 +181,7 @@ $req->closeCursor(); // Termine le traitement de la requête
         print "Report failed.\n";
     }
 
-         $file_csv='./taskId/file.csv';
+        $file_csv='./taskId/file-'.$campaign_admanager_id.'.csv';
 
         if (file_exists($file_csv)) {
             $handle = fopen($file_csv, "r");
@@ -305,26 +206,15 @@ $req->closeCursor(); // Termine le traitement de la requête
 
         }
 
-   
-
     
     }
 
-    public static function main()
-    {
-        $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()
-            ->build();
-        $session = (new AdManagerSessionBuilder())->fromFile()
-            ->withOAuth2Credential($oAuth2Credential)
-            ->build();
-        self::runExample(
-            new ServiceFactory(),
-            $session,
-            intval(self::ORDER_NAME)
-        );
-    }
-    */
+}
+// $req->closeCursor(); // Termine le traitement de la requête
 
 
- //CampaignsReport::main();
+
+    
+
+
 ?>
