@@ -27,6 +27,7 @@ class GetAllOrders
         // Create a statement to select orders.
         $pageSize = StatementBuilder::SUGGESTED_PAGE_LIMIT;
         $statementBuilder = (new StatementBuilder())->orderBy('id ASC')
+            ->where('isArchived = false')
             ->limit($pageSize);
 
         // Retrieve a small amount of orders at a time, paging
