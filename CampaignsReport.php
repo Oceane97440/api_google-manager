@@ -62,6 +62,8 @@ while ($donnees = $req->fetch())
     $campaign_admanager_exist=$req_admanager->fetch();
     $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
     $campaign_admanager_id = $campaign_admanager_exist['advertiser_admanager_id'];
+    $campaign_admanager_status = $campaign_admanager_exist['campaign_admanager_status'];
+
 
 
     //si sa existe on crée les rapport pour les campagnes trouvées
@@ -70,7 +72,9 @@ while ($donnees = $req->fetch())
 
         echo $campaign_admanager_name;
         echo $campaign_admanager_id;
-
+        echo $campaign_admanager_status;
+    
+    
         $reportService = $serviceFactory->createReportService($session);
 
         $reportQuery = new ReportQuery();
@@ -94,7 +98,20 @@ while ($donnees = $req->fetch())
             ]
         );
 
-      
+             // Create statement to filter for an order.
+             $statementBuilder = (new StatementBuilder())
+            ->where('ORDER_NAME = :orderName')
+            ->withBindVariableValue(
+                'orderName',
+                $campaign_admanager_name
+            );
+   
+           // Set the filter statement.
+         $reportQuery->setStatement($statementBuilder->toStatement());
+ 
+        // var_dump($reportQuery);
+ 
+        // Set the start and end dates or choose a dynamic date range type.
         $reportQuery->setDateRangeType(DateRangeType::TODAY);
 
         //var_dump($reportQuery);
@@ -116,28 +133,28 @@ while ($donnees = $req->fetch())
 
 
 
-          
+
+
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
         
-        $filePath = sprintf('file-'.$campaign_admanager_id.'.csv.gz');
+        $filePath = sprintf('file-'.$campaign_admanager_name.'.csv.gz');
 
-       // printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
         $reportDownloader->downloadReport(
             ExportFormat::CSV_DUMP,
             $filePath
         );
 
-       // print "done.\n";
+        var_dump($filePath);
 
-        
-       /*$path = 'taskId/'.date('Y/m/d/H');
+
+        $path = 'taskId';
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
-        }*/
+        }
 
-        $file_name='./file-'.$campaign_admanager_id.'.csv.gz';
+        $file_name='./file-'.$campaign_admanager_name.'.csv.gz';
 
         //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
@@ -158,17 +175,12 @@ while ($donnees = $req->fetch())
         gzclose($file);
 
 
-        $file_exist = './file-'.$campaign_admanager_id.'.csv';
+        $file_exist = './file-'.$campaign_admanager_name.'.csv';
 
-
-        /*$mydate=getdate(date('U'));
-        $YEAR=$mydate[year];
-        $MONTH=$mydate[mon];
-        $DAY=$mydate[mday];*/
 
         if (file_exists($file_exist)) {
 
-        rename($file_exist,'./taskId/file-'.$campaign_admanager_id.'.csv');
+        rename($file_exist,'./taskId/file-'.$campaign_admanager_name.'.csv');
         unlink($file_name);
 
 
@@ -177,11 +189,9 @@ while ($donnees = $req->fetch())
      
   
 
-    } else {
-        print "Report failed.\n";
-    }
+    } 
 
-        $file_csv='./taskId/file-'.$campaign_admanager_id.'.csv';
+      /*  $file_csv='./taskId/file-'.$campaign_admanager_id.'.csv';
 
         if (file_exists($file_csv)) {
             $handle = fopen($file_csv, "r");
@@ -206,8 +216,21 @@ while ($donnees = $req->fetch())
 
         }
 
-    
+
+
+
+*/
+
+
+
+
+
+
+
     }
+
+    
+  
 
 }
 // $req->closeCursor(); // Termine le traitement de la requête
