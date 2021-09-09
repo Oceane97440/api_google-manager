@@ -7,22 +7,35 @@ use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\AdManager\Util\v202108\StatementBuilder;
 use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
+include('./includes/config.php');
 
-/**
- * This example gets all orders.
- *
- * <p>It is meant to be run from a command line (not as a webpage) and requires
- * that you've setup an `adsapi_php.ini` file in your home directory with your
- * API credentials and settings. See README.md for more info.
- */
-class GetAllOrders
-{
+// Generate a refreshable OAuth2 credential for authentication.
+$oAuth2Credential = (new OAuth2TokenBuilder())
+    ->fromFile()
+    ->build();
+// Construct an API session configured from a properties file and the OAuth2
+// credentials above.
+$session = (new AdManagerSessionBuilder())
+    ->fromFile()
+    ->withOAuth2Credential($oAuth2Credential)
+    ->build();
 
-    public static function runExample(
-        ServiceFactory $serviceFactory,
-        AdManagerSession $session
-    ) {
-        $orderService = $serviceFactory->createOrderService($session);
+// Get a service.
+$serviceFactory = new ServiceFactory();
+$orderService = $serviceFactory->createOrderService($session);
+
+// Make a request
+/*$network = $orderService->getOrdersByStatement();
+printf(
+    "Network with code %d and display name '%s' was found.\n",
+    $network->getNetworkCode(),
+    $network->getDisplayName()
+);*/
+
+
+
+
+
 
         // Create a statement to select orders.
         $pageSize = StatementBuilder::SUGGESTED_PAGE_LIMIT;
@@ -45,9 +58,17 @@ class GetAllOrders
 
                 $i = $page->getStartIndex();
                 foreach ($page->getResults() as $order) {
-                
 
-                    printf(
+                   $campaign_id= $order->getId();
+                   $campaign_name= $order->getName();
+                   $advertiser_id = $order->getadvertiserId();
+                   $campaign_start_date =  $order->getstartDateTime();
+                   $campaign_end_date =  $order->getendDateTime();
+                   $campaign_status = $order->getstatus();
+
+                
+                   
+                   printf(
                         "%d) Order with ID %d and name '%s' was found.%s advertiserId ",
 
                         $i++,
@@ -63,7 +84,11 @@ class GetAllOrders
                     );
                    
 
+                    // $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_start_date,campaign_admanager_end_date,campaign_admanager_status) VALUES (?,?,?,?,?,?)');
+                    // $getcampaigns ->execute(array($campaign_id,$advertiser_id,$campaign_name,$campaign_start_date,$campaign_end_date,$campaign_status));
 
+                    $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_status) VALUES (?,?,?,?)');
+                    $getcampaigns ->execute(array($campaign_id,$advertiser_id,$campaign_name,$campaign_status));
 
                 }
         
@@ -73,22 +98,6 @@ class GetAllOrders
         } while ($statementBuilder->getOffset() < $totalResultSetSize);
 
         printf("Number of results found: %d%s", $totalResultSetSize, PHP_EOL);
-    }
+    
 
-    public static function main()
-    {
-        // Generate a refreshable OAuth2 credential for authentication.
-        $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()
-            ->build();
 
-        // Construct an API session configured from an `adsapi_php.ini` file
-        // and the OAuth2 credentials above.
-        $session = (new AdManagerSessionBuilder())->fromFile()
-            ->withOAuth2Credential($oAuth2Credential)
-            ->build();
-
-        self::runExample(new ServiceFactory(), $session);
-    }
-}
-
-GetAllOrders::main();
