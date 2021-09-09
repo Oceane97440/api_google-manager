@@ -69,24 +69,12 @@ while ($donnees = $req->fetch())
         echo $campaign_admanager_name;
         $reportService = $serviceFactory->createReportService($session);
 
-        // Create report query.
         $reportQuery = new ReportQuery();
         $reportQuery->setDimensions(
             [
                 Dimension::ORDER_ID,
                 Dimension::ORDER_NAME,
-                //format id format_name
-                Dimension::PLACEMENT_ID,
-                Dimension::PLACEMENT_NAME,
-                //recupération data creative 
-                Dimension::CREATIVE_ID,
-                Dimension::CREATIVE_NAME,
-                Dimension::CREATIVE_TYPE,
-                Dimension::CREATIVE_SIZE,
-
-                
-
-
+  
             ]
         );
         $reportQuery->setDimensionAttributes(
@@ -98,24 +86,32 @@ while ($donnees = $req->fetch())
         $reportQuery->setColumns(
             [
                 Column::AD_SERVER_IMPRESSIONS,
-                Column::AD_SERVER_CLICKS,
-                Column::AD_SERVER_CTR,
 
             ]
         );
 
-            // Create statement to filter for an order.
-            $statementBuilder = (new StatementBuilder())
-            ->where('ORDER_NAME = :orderName')
-            ->withBindVariableValue(
-                'orderName',
-                $campaign_admanager_name
-            );
+      
+        $reportQuery->setDateRangeType(DateRangeType::TODAY);
+
+        //var_dump($reportQuery);
+
+        
+        // Create report job and start it.
+      $reportJob = new ReportJob();
+      $reportJob->setReportQuery($reportQuery);
+      $reportJob = $reportService->runReportJob($reportJob);
+
+
   
-          // Set the filter statement.
-        $reportQuery->setStatement($statementBuilder->toStatement());    
-        var_dump($reportQuery);
-    
+      // Create report downloader to poll report's status and download when
+      // ready.
+      $reportDownloader = new ReportDownloader(
+        $reportService,
+        $reportJob->getId()
+    );
+
+          var_dump($reportDownloader);
+
     
     }
 
