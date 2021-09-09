@@ -22,42 +22,102 @@ use Google\AdsApi\AdManager\v202108\Dimension;
 use Google\AdsApi\AdManager\v202108\DimensionAttribute;
 use Google\AdsApi\AdManager\v202108\ReportQuery;
 
+// Generate a refreshable OAuth2 credential for authentication.
+$oAuth2Credential = (new OAuth2TokenBuilder())
+    ->fromFile()
+    ->build();
+// Construct an API session configured from a properties file and the OAuth2
+// credentials above.
+$session = (new AdManagerSessionBuilder())
+    ->fromFile()
+    ->withOAuth2Credential($oAuth2Credential)
+    ->build();
 
+// Get a service.
+$serviceFactory = new ServiceFactory();
 
-
+// Requête liste tous les campagnes SMART qui ont pour format (INTERSTITIEL , MASTHEAD)
 $req=$bdd->query('SELECT campaign_id , format_id FROM asb_insertions WHERE format_id IN (79409,79633,44152) GROUP BY campaign_id , format_id');
 
 $donnees = $req->fetch();
 
 
-// On boucle sur la campa
+// On boucle sur la campagne
 while ($donnees = $req->fetch())
 {
+    // pour chaque campagne on recupérer la campagne_id et campagne_name
     $req_campaign=$bdd->prepare("SELECT*FROM asb_campaigns WHERE campaign_id=?");
     $campaign_id= $donnees['campaign_id'];
     $req_campaign->execute(array($campaign_id) );
     $campaign_exist=$req_campaign->rowCount();
     $campaign_exist=$req_campaign->fetch();
-
-//  var_dump($campaign_exist['campaign_name']);
-
     $campaign_name = $campaign_exist['campaign_name'];
-    // Create statement to filter for an order.
-    $statementBuilder = (new StatementBuilder())
-    ->where('ORDER_NAME = :orderName')
-    ->withBindVariableValue(
-        'orderName',
-        $campaign_name
-    );
 
- $test = (new Statement.query())
- ->where('status  = :status')
- ->withBindVariableValue(
-     'status',
-     'APPROVED'
- );
- var_dump($test);
 
+    //Vérification si la campagne_name existe déja dans la table asb_campaigns_admanager
+    $req_admanager=$bdd->prepare("SELECT*FROM asb_campaigns_admanager WHERE campaign_admanager_name=? AND campaign_admanager_status='APPROVED' "); 
+    $req_admanager->execute(array($campaign_name));
+    $admanagerexist=$req_admanager->rowCount();
+
+    $campaign_admanager_exist=$req_admanager->fetch();
+    $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
+
+    //si sa existe on crée les rapport pour les campagnes trouvées
+    if($admanagerexist==1)
+    {
+
+        echo $campaign_admanager_name;
+        $reportService = $serviceFactory->createReportService($session);
+
+        // Create report query.
+        $reportQuery = new ReportQuery();
+        $reportQuery->setDimensions(
+            [
+                Dimension::ORDER_ID,
+                Dimension::ORDER_NAME,
+                //format id format_name
+                Dimension::PLACEMENT_ID,
+                Dimension::PLACEMENT_NAME,
+                //recupération data creative 
+                Dimension::CREATIVE_ID,
+                Dimension::CREATIVE_NAME,
+                Dimension::CREATIVE_TYPE,
+                Dimension::CREATIVE_SIZE,
+
+                
+
+
+            ]
+        );
+        $reportQuery->setDimensionAttributes(
+            [
+                DimensionAttribute::ORDER_START_DATE_TIME,
+                DimensionAttribute::ORDER_END_DATE_TIME
+            ]
+        );
+        $reportQuery->setColumns(
+            [
+                Column::AD_SERVER_IMPRESSIONS,
+                Column::AD_SERVER_CLICKS,
+                Column::AD_SERVER_CTR,
+
+            ]
+        );
+
+            // Create statement to filter for an order.
+            $statementBuilder = (new StatementBuilder())
+            ->where('ORDER_NAME = :orderName')
+            ->withBindVariableValue(
+                'orderName',
+                $campaign_admanager_name
+            );
+  
+          // Set the filter statement.
+        $reportQuery->setStatement($statementBuilder->toStatement());    
+        var_dump($reportQuery);
+    
+    
+    }
 
 }
 $req->closeCursor(); // Termine le traitement de la requête
@@ -65,36 +125,6 @@ $req->closeCursor(); // Termine le traitement de la requête
 
 
     
-
-class CampaignsReport
-{
-    public static function runExample(
-        ServiceFactory $serviceFactory,
-        AdManagerSession $session
-    ) {
-
-
-
-        $statementBuilder = (new StatementBuilder())->where('id = :id')
-        ->orderBy('id ASC')
-        ->limit(1);
-
-        var_dump($statementBuilder);
-    }
-
-
-    public static function main()
-    {
-        $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()
-        ->build();
-    $session = (new AdManagerSessionBuilder())->fromFile()
-        ->withOAuth2Credential($oAuth2Credential)
-        ->build();
-    self::runExample(
-        new ServiceFactory(),
-        $session
-    );
-    }
 
 
 /*
@@ -298,7 +328,7 @@ class CampaignsReport
         );
     }
     */
-}
 
- CampaignsReport::main();
+
+ //CampaignsReport::main();
 ?>
