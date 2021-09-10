@@ -52,27 +52,6 @@ ORDER BY `asb_campaigns`.`campaign_name` ASC
 
 $donnees = $req->fetch();
 
-/* // Heure actuelle
-echo ' 1- '.date('h:i:s') . "<br>";
-for ($i = 0; $i <= 5; $i++) {
-
-    $campaign_id= $donnees['campaign_id'];
-    $campaign_name = $donnees['campaign_name'];
-    echo ' 2-'.date('h:i:s') . "<br>";
-    
-  if($i === 2){
-    sleep(10);
-
-  }  
-
- 
-    echo ' 3-'.date('h:i:s') . "<br>";
-   
-  
-}
-echo ' 4-'.date('h:i:s') . "<br>";
-exit();*/
-
 
 
 // On boucle sur la campagne
@@ -91,7 +70,10 @@ while ($donnees = $req->fetch())
 
 
     $campaign_admanager_exist=$req_admanager->fetch();
+
     $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
+    $campaign_start_date = $campaign_admanager_exist['campaign_admanager_start_date'];
+
  
 
 
@@ -136,12 +118,31 @@ while ($donnees = $req->fetch())
                 
             );
    
-            var_dump($statementBuilder);
            // Set the filter statement.
          $reportQuery->setStatement($statementBuilder->toStatement());
   
         // Set the start and end dates or choose a dynamic date range type.
-        $reportQuery->setDateRangeType(DateRangeType::TODAY);
+        $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
+       
+        $reportQuery->setStartDate(
+            AdManagerDateTimes::fromDateTime(
+                new DateTime(
+                    $campaign_start_date,
+                    new DateTimeZone('America/New_York')
+                )
+            )
+                ->getDate()
+        );
+
+         $reportQuery->setEndDate(
+            AdManagerDateTimes::fromDateTime(
+                new DateTime(
+                    'now',
+                    new DateTimeZone('America/New_York')
+                )
+            )
+                ->getDate()
+        );
 
         
         // Create report job and start it.
@@ -197,25 +198,50 @@ while ($donnees = $req->fetch())
         fclose($out_file);
         gzclose($file);
 
+        
+        // lecture des fichiers csv
 
         $file_exist = './file-'.$campaign_admanager_name.'.csv';
 
-
         if (file_exists($file_exist)) {
 
-        rename($file_exist,'./taskId/file-'.$campaign_admanager_name.'.csv');
-        unlink($file_name);
+            rename($file_exist,'./taskId/file-'.$campaign_admanager_name.'.csv');
+            unlink($file_name);
         }
 
 
 
 
+
+        $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
+
+        $row = 1;
+        if (($handle = fopen($file_csv, "r")) !== FALSE) {
+
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+
+                $row++;
+
+                for ($c=0; $c < $num; $c++) {
+
+                    $json = json_encode($data[$c]);
+                  //  $bytes = file_put_contents("./taskId/json/".$campaign_admanager_name.".json", $json); 
+                    //echo $json ;
+
+                }
+
+            
+
+            }
+            fclose($handle);
+        }
+        
         
 
 
 
         }
-
 
 
 
@@ -242,24 +268,7 @@ while ($donnees = $req->fetch())
 
     }
 
-    if (file_exists($file_csv)) {
-        $handle = fopen($file_csv, "r");
-        $data = fgetcsv($handle);
-        
-        /*function read($csv){
-            $file = fopen($csv, 'r');
-            while (!feof($file) ) {
-                $line[] = fgetcsv($file, 1024);
-            }
-            fclose($file);
-            return $line;
-        }
-        // Définir le chemin d'accès au fichier CSV
-        $csv = $file_csv;
-        $csv = read($csv);
-        echo json_encode($csv);*/
 
-    }
 
 
 exit();
