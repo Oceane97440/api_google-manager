@@ -38,69 +38,20 @@ $session = (new AdManagerSessionBuilder())
 // Get a service.
 $serviceFactory = new ServiceFactory();
 
-// Requête liste tous les campagnes SMART qui ont pour format (INTERSTITIEL , MASTHEAD)
-$req=$bdd->query('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= "2021-06-01 00:00:00"
-GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
-ORDER BY `asb_campaigns`.`campaign_name` ASC');
-
-/*
-SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= '2021-06-01 00:00:00'
-GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
-ORDER BY `asb_campaigns`.`campaign_name` ASC
-*/
 
 
-$donnees = $req->fetch();
 
-/* // Heure actuelle
-echo ' 1- '.date('h:i:s') . "<br>";
-for ($i = 0; $i <= 5; $i++) {
 
-    $campaign_id= $donnees['campaign_id'];
-    $campaign_name = $donnees['campaign_name'];
-    echo ' 2-'.date('h:i:s') . "<br>";
-    
-  if($i === 2){
-    sleep(10);
 
-  }  
+
+
+ 
+ $campaign_admanager_name = 'ARACT REUNION - 68877';
+
+
 
  
-    echo ' 3-'.date('h:i:s') . "<br>";
-   
-  
-}
-echo ' 4-'.date('h:i:s') . "<br>";
-exit();*/
-
-
-
-// On boucle sur la campagne
-$i = 0;
-while ($donnees = $req->fetch())
-{
-
-    
-    $campaign_id= $donnees['campaign_id'];
-    $campaign_name = $donnees['campaign_name'];
-
-    //Vérification si la campagne_name existe déja dans la table asb_campaigns_admanager
-    $req_admanager=$bdd->prepare("SELECT*FROM asb_campaigns_admanager WHERE campaign_id=? AND campaign_admanager_name=? AND campaign_admanager_status='APPROVED' "); 
-    $req_admanager->execute(array($campaign_id,$campaign_name));
-    $admanagerexist=$req_admanager->rowCount();
-
-
-    $campaign_admanager_exist=$req_admanager->fetch();
-    $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
- 
-
-
-     //si sa existe on crée les rapport pour les campagnes trouvées
-     if($admanagerexist==1)
-     {
-
         
-        echo $campaign_admanager_name.' 2-'.date('h:i:s') . "<br>";
 
     
     
@@ -141,7 +92,30 @@ while ($donnees = $req->fetch())
          $reportQuery->setStatement($statementBuilder->toStatement());
   
         // Set the start and end dates or choose a dynamic date range type.
-        $reportQuery->setDateRangeType(DateRangeType::TODAY);
+        //$reportQuery->setDateRangeType(DateRangeType::TODAY);
+        $campaign_start_date = '2021-06-14 00:00:00';
+        $campaign_end_date = '2021-06-18 23:59:00';
+             // Set the start and end dates or choose a dynamic date range type.
+            $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
+       
+            $reportQuery->setStartDate(
+                AdManagerDateTimes::fromDateTime(
+                    new DateTime(
+                        $campaign_start_date,
+                        new DateTimeZone('America/New_York')
+                    )
+                )
+                    ->getDate()
+            );
+            $reportQuery->setEndDate(
+                AdManagerDateTimes::fromDateTime(
+                    new DateTime(
+                        $campaign_end_date,
+                        new DateTimeZone('America/New_York')
+                    )
+                )
+                    ->getDate()
+            );
 
         
         // Create report job and start it.
@@ -210,56 +184,59 @@ while ($donnees = $req->fetch())
 
 
 
-        
+   
 
 
 
         }
+
+            $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
+
+            if (file_exists($file_csv)) {
+                $handle = fopen($file_csv, "r");
+                $data = fgetcsv($handle);
+                //renvoi la data en json     
+                echo json_encode($data);
+        
+        
+                function read($csv){
+                    $file = fopen($csv, 'r');
+                    while (!feof($file) ) {
+                        $line[] = fgetcsv($file, 1024);
+                    }
+                    fclose($file);
+                    return $line;
+                }
+                // Définir le chemin d'accès au fichier CSV
+                $csv = $file_csv;
+                $csv = read($csv);
+                echo json_encode($csv);
+
+                $json = json_encode($csv);
+                $bytes = file_put_contents("./".$campaign_admanager_name.".json", $json); 
+        
+            }
+        
 
 
 
 
 
     
-     }
+     
 
    
     
-     if($i === 5){
-       sleep(60);
+  
 
-        $i = 0;
-      }  
+  
+
+
+
     
-      $i++;
-  
-
-  
-
-  
 
 
 
-    }
-
-    if (file_exists($file_csv)) {
-        $handle = fopen($file_csv, "r");
-        $data = fgetcsv($handle);
-        
-        /*function read($csv){
-            $file = fopen($csv, 'r');
-            while (!feof($file) ) {
-                $line[] = fgetcsv($file, 1024);
-            }
-            fclose($file);
-            return $line;
-        }
-        // Définir le chemin d'accès au fichier CSV
-        $csv = $file_csv;
-        $csv = read($csv);
-        echo json_encode($csv);*/
-
-    }
 
 
 exit();
