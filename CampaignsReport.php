@@ -225,7 +225,9 @@ while ($donnees = $req->fetch())
 
                 for ($c=0; $c < $num; $c++) {
 
-                    $json = json_encode($data[$c]);
+
+                    $json = json_encode($data);
+
                    $bytes = file_put_contents("./taskId/json/".$campaign_admanager_name.".json", $json); 
                     echo $json ;
 
