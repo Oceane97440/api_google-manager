@@ -62,13 +62,13 @@ printf(
                    $campaign_id= $order->getId();
                    $campaign_name= $order->getName();
                    $advertiser_id = $order->getadvertiserId();
-                   $campaign_start_date =  $order->getstartDateTime();
-                   $campaign_end_date =  $order->getendDateTime();
+                   //$campaign_start_date =  $order->getstartDateTime();
+                   //$campaign_end_date =  $order->getendDateTime();
                    $campaign_status = $order->getstatus();
 
                 
                    
-                   printf(
+                   /*printf(
                         "%d) Order with ID %d and name '%s' was found.%s advertiserId ",
 
                         $i++,
@@ -81,15 +81,26 @@ printf(
 
 
                         PHP_EOL
-                    );
+                    );*/
                    
 
-                    // $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_start_date,campaign_admanager_end_date,campaign_admanager_status) VALUES (?,?,?,?,?,?)');
-                    // $getcampaigns ->execute(array($campaign_id,$advertiser_id,$campaign_name,$campaign_start_date,$campaign_end_date,$campaign_status));
+                    $req_campaign=$bdd->prepare("SELECT*FROM asb_campaigns WHERE campaign_name=?");
+                    $req_campaign->execute(array($campaign_name) );
+                    $campaign_exist=$req_campaign->rowCount();
+                    $campaign_exist=$req_campaign->fetch();
+                    $campaign_id_smart = $campaign_exist['campaign_id'];
+                    $campaign_start_date = $campaign_exist['campaign_start_date'];
+                    $campaign_end_date = $campaign_exist['campaign_end_date'];
 
-                    $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_status) VALUES (?,?,?,?)');
-                    $getcampaigns ->execute(array($campaign_id,$advertiser_id,$campaign_name,$campaign_status));
 
+                    echo $campaign_id_smart .'-';
+
+                    $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,campaign_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_start_date,campaign_admanager_end_date,campaign_admanager_status) VALUES (?,?,?,?,?,?,?)');
+                    $getcampaigns ->execute(array($campaign_id,$campaign_id_smart,$advertiser_id,$campaign_name,$campaign_start_date,$campaign_end_date,$campaign_status));
+
+
+
+                
                 }
         
             }
