@@ -46,7 +46,9 @@ $serviceFactory = new ServiceFactory();
 
 
  
- $campaign_admanager_name = 'ARACT REUNION - 68877';
+ //$campaign_admanager_name = 'ARACT REUNION - 68877';
+ $campaign_admanager_name = 'CANAL CBOX - 70063';
+
 
 
 
@@ -92,9 +94,8 @@ $serviceFactory = new ServiceFactory();
          $reportQuery->setStatement($statementBuilder->toStatement());
   
         // Set the start and end dates or choose a dynamic date range type.
-        //$reportQuery->setDateRangeType(DateRangeType::TODAY);
-        $campaign_start_date = '2021-06-14 00:00:00';
-        $campaign_end_date = '2021-06-18 23:59:00';
+
+        $campaign_start_date = '2021-07-02 09:14:00';
              // Set the start and end dates or choose a dynamic date range type.
             $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
        
@@ -107,10 +108,11 @@ $serviceFactory = new ServiceFactory();
                 )
                     ->getDate()
             );
-            $reportQuery->setEndDate(
+
+             $reportQuery->setEndDate(
                 AdManagerDateTimes::fromDateTime(
                     new DateTime(
-                        $campaign_end_date,
+                        'now',
                         new DateTimeZone('America/New_York')
                     )
                 )
