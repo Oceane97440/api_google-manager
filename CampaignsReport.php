@@ -73,6 +73,8 @@ while ($donnees = $req->fetch())
 
     $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
     $campaign_start_date = $campaign_admanager_exist['campaign_admanager_start_date'];
+    $campaign_id_admanager = $campaign_admanager_exist['campaign_id'];
+
 
  
 
@@ -220,23 +222,29 @@ while ($donnees = $req->fetch())
 
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
-
+              
                 $row++;
+             
+                    $myObj = new stdClass();
+                    $myObj->campaign_id = $data[0];
+                    $myObj->campaign_name = $data[1];
+                    $myObj->campaign_start_date = $data[2];
+                    $myObj->campaign_end_date = $data[3];
+                    $myObj->impressions = $data[4];
 
-                for ($c=0; $c < $num; $c++) {
 
+                    $myJSON = json_encode($myObj);
 
-                    $json = json_encode($data);
+                    echo $myJSON;
 
-                   $bytes = file_put_contents("./taskId/json/".$campaign_admanager_name.".json", $json); 
-                    echo $json ;
-
-                }
-
-            
-
+                    $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_id_admanager, $myJSON); 
+                
             }
-            fclose($handle);
+  
+
+
+        fclose($handle);
+
         }
         
         

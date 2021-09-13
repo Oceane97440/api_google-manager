@@ -48,6 +48,8 @@ $serviceFactory = new ServiceFactory();
  
  //$campaign_admanager_name = 'ARACT REUNION - 68877';
  $campaign_admanager_name = 'CANAL CBOX - 70063';
+ $campaign_admanager_id = '19554';
+
 
 
 
@@ -89,7 +91,6 @@ $serviceFactory = new ServiceFactory();
                 
             );
    
-            var_dump($statementBuilder);
            // Set the filter statement.
          $reportQuery->setStatement($statementBuilder->toStatement());
   
@@ -197,10 +198,33 @@ $serviceFactory = new ServiceFactory();
             if (file_exists($file_csv)) {
                 $handle = fopen($file_csv, "r");
                 $data = fgetcsv($handle);
-                //renvoi la data en json     
-                echo json_encode($data);
         
-        
+                $row = 1;
+                $handle = fopen($file_csv, "r");
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $num = count($data);
+                  
+                    $row++;
+                 
+                        $myObj = new stdClass();
+                        $myObj->campaign_id = $data[0];
+                        $myObj->campaign_name = $data[1];
+                        $myObj->campaign_start_date = $data[2];
+                        $myObj->campaign_end_date = $data[3];
+                        $myObj->impressions = $data[4];
+    
+    
+                        $myJSON = json_encode($myObj);
+    
+                        echo $myJSON;
+
+                        $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_admanager_id, $myJSON); 
+
+                    
+                }
+                fclose($handle);
+                
+        /*
                 function read($csv){
                     $file = fopen($csv, 'r');
                     while (!feof($file) ) {
@@ -212,10 +236,11 @@ $serviceFactory = new ServiceFactory();
                 // Définir le chemin d'accès au fichier CSV
                 $csv = $file_csv;
                 $csv = read($csv);
-                echo json_encode($csv);
+                $json_encode =  json_encode($csv);
+               // echo $json_encode[3][1];*/
 
-                $json = json_encode($csv);
-                $bytes = file_put_contents("./".$campaign_admanager_name.".json", $json); 
+               /* $json = json_encode($csv);
+                $bytes = file_put_contents("./campaignID-".$campaign_admanager_id.".json", $json); */
         
             }
         
