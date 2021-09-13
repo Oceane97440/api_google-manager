@@ -39,6 +39,9 @@ $session = (new AdManagerSessionBuilder())
 $serviceFactory = new ServiceFactory();
 
 // Requête liste tous les campagnes SMART qui ont pour format (INTERSTITIEL , MASTHEAD)
+echo date("Y-m-d H:i:s",strtotime("-3 month"));
+
+
 $req=$bdd->query('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= "2021-06-01 00:00:00"
 GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
 ORDER BY `asb_campaigns`.`campaign_name` ASC');
@@ -107,6 +110,8 @@ while ($donnees = $req->fetch())
         $reportQuery->setColumns(
             [
                 Column::AD_SERVER_IMPRESSIONS,
+                Column::AD_SERVER_CLICKS,
+                Column::AD_SERVER_CTR,
 
             ]
         );
@@ -166,7 +171,7 @@ while ($donnees = $req->fetch())
     if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
         
-       $filePath = sprintf('file-'.$campaign_admanager_name.'.csv.gz');
+       $filePath = sprintf('campaignID-'.$campaign_id_admanager.'.csv.gz');
 
         // Download the report.
         $reportDownloader->downloadReport(
@@ -180,7 +185,7 @@ while ($donnees = $req->fetch())
             mkdir($path, 0777, true);
         }
 
-        $file_name='./file-'.$campaign_admanager_name.'.csv.gz';
+        $file_name='./campaignID-'.$campaign_id_admanager.'.csv.gz';
 
         //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
@@ -203,11 +208,11 @@ while ($donnees = $req->fetch())
         
         // lecture des fichiers csv
 
-        $file_exist = './file-'.$campaign_admanager_name.'.csv';
+        $file_exist = './campaignID-'.$campaign_id_admanager.'.csv';
 
         if (file_exists($file_exist)) {
 
-            rename($file_exist,'./taskId/file-'.$campaign_admanager_name.'.csv');
+            rename($file_exist,'./taskId/campaignID-'.$campaign_id_admanager.'.csv');
             unlink($file_name);
         }
 
@@ -215,7 +220,7 @@ while ($donnees = $req->fetch())
 
 
 
-        $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
+        $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
 
         $row = 1;
         if (($handle = fopen($file_csv, "r")) !== FALSE) {
@@ -231,6 +236,9 @@ while ($donnees = $req->fetch())
                     $myObj->campaign_start_date = $data[2];
                     $myObj->campaign_end_date = $data[3];
                     $myObj->impressions = $data[4];
+                    $myObj->clicks = $data[5];
+                    $myObj->ctr = $data[6];
+
 
 
                     $myJSON = json_encode($myObj);
