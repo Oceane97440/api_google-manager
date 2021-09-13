@@ -39,13 +39,18 @@ $session = (new AdManagerSessionBuilder())
 $serviceFactory = new ServiceFactory();
 
 // Requête liste tous les campagnes SMART qui ont pour format (INTERSTITIEL , MASTHEAD)
-echo date("Y-m-d H:i:s",strtotime("-3 month"));
+$last_3_month =  date("Y-m-d",strtotime("-3 month"));
 
 
-$req=$bdd->query('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= "2021-06-01 00:00:00"
+/*$req=$bdd->query('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= '.$last_3_month.'
+GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
+ORDER BY `asb_campaigns`.`campaign_name` ASC');*/
+
+
+$req=$bdd->prepare('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= ?
 GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
 ORDER BY `asb_campaigns`.`campaign_name` ASC');
-
+$req->execute(array($last_3_month));
 /*
 SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= '2021-06-01 00:00:00'
 GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
