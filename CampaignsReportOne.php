@@ -23,7 +23,7 @@ use Google\AdsApi\AdManager\v202108\DateRangeType;
 use Google\AdsApi\AdManager\v202108\Dimension;
 use Google\AdsApi\AdManager\v202108\DimensionAttribute;
 use Google\AdsApi\AdManager\v202108\ReportQuery;
-
+/*
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
     ->fromFile()
@@ -66,6 +66,14 @@ $serviceFactory = new ServiceFactory();
             [
                 Dimension::ORDER_ID,
                 Dimension::ORDER_NAME,
+                  //format id format_name
+                  Dimension::PLACEMENT_ID,
+                  Dimension::PLACEMENT_NAME,
+                  //recupération data creative 
+                  Dimension::CREATIVE_ID,
+                  Dimension::CREATIVE_NAME,
+                //  Dimension::CREATIVE_TYPE,
+                  Dimension::CREATIVE_SIZE,
   
             ]
         );
@@ -78,6 +86,8 @@ $serviceFactory = new ServiceFactory();
         $reportQuery->setColumns(
             [
                 Column::AD_SERVER_IMPRESSIONS,
+                Column::AD_SERVER_CLICKS,
+                Column::AD_SERVER_CTR,
 
             ]
         );
@@ -192,57 +202,76 @@ $serviceFactory = new ServiceFactory();
 
 
         }
+*/
+            $campaign_admanager_name = 'CANAL CBOX - 70063';
+            $campaign_admanager_id = '19554';
+
+            $arrayCorrespondance = array('480 x 320' => '79633',
+            '1024 x 768' => '44152',
+            '768 x 1024' => '44152',
+            '320 x 480' => '79633',
+
+        
+            );
+            
+
+
 
             $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
-
             if (file_exists($file_csv)) {
-                $handle = fopen($file_csv, "r");
-                $data = fgetcsv($handle);
-        
-                $row = 1;
-                $handle = fopen($file_csv, "r");
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    $num = count($data);
-                  
-                    $row++;
-                 
-                        $myObj = new stdClass();
-                        $myObj->campaign_id = $data[0];
-                        $myObj->campaign_name = $data[1];
-                        $myObj->campaign_start_date = $data[2];
-                        $myObj->campaign_end_date = $data[3];
-                        $myObj->impressions = $data[4];
-    
-    
-                        $myJSON = json_encode($myObj);
-    
-                        echo $myJSON;
+                // Récupére l'ensemble du contenu du fichier
+                $data = file_get_contents($file_csv);
+               
+                // 
+                if(!empty($data) && (preg_match_all('(.*)',$data,$out) )) {
+                    $dataArray = array();
 
-                        $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_admanager_id, $myJSON); 
+                    // Créer un tableau à partir d'un string                   
+                    if(count($out) > 0) {
+                        foreach($out[0] as $key => $item):
+                            if(!empty($item) and ($key > 0)) {
+                                $dataArray[] = explode(',',$item);
+                            }
+                        endforeach;
+                       
+                        if(!empty($dataArray)) {
+                            foreach($dataArray as $key => $item):
+                                $myObj[] = array(
+                                    'campaign_id '=> $item[0],
+                                    'campaign_name' => $item[1],
+                                    'format_id'=>  $arrayCorrespondance[$item[6]],
+                                    'format_name' => $item[3],
+                                    'creative_id' => $item[4],
+                                    'creative_name' => $item[5],
+                                    'creative_size' => $item[6],
+                                    'campaign_start_date' => $item[7],
+                                    'campaign_end_date' => $item[8],
+                                    'impressions' => $item[9],
+                                    'clicks' => $item[10],
+                                    'ctr' => $item[11]
+                                );
+                            endforeach;
+                            
+                            $myJSON = json_encode($myObj);
+
+                            echo $myJSON;
+
+
+                            $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_admanager_id.".json", $myJSON); 
+                        }
+
+                    }
+
 
                     
-                }
-                fclose($handle);
-                
-        /*
-                function read($csv){
-                    $file = fopen($csv, 'r');
-                    while (!feof($file) ) {
-                        $line[] = fgetcsv($file, 1024);
-                    }
-                    fclose($file);
-                    return $line;
-                }
-                // Définir le chemin d'accès au fichier CSV
-                $csv = $file_csv;
-                $csv = read($csv);
-                $json_encode =  json_encode($csv);
-               // echo $json_encode[3][1];*/
+                   
 
-               /* $json = json_encode($csv);
-                $bytes = file_put_contents("./campaignID-".$campaign_admanager_id.".json", $json); */
-        
+                }
+
+
+
             }
+
         
 
 
