@@ -203,8 +203,8 @@ $serviceFactory = new ServiceFactory();
 
         }
 */
-            $campaign_admanager_name = 'ARIBEV - 69483';
-            $campaign_id_admanager = '1912738';
+            $campaign_admanager_name = 'CANAL CBOX - 70063';
+            $campaign_id_admanager = '1921947';
 
             $arrayCorrespondance = array(
                 '480 x 320' => '79633',
@@ -328,7 +328,7 @@ $serviceFactory = new ServiceFactory();
 
                             
                             $myObj['campaign'] = array(
-                                'campaign_id '=> $item[0],
+                                'campaign_id'=> $item[0],
                                 'campaign_name' => $item[1],
                                 'campaign_start_date' => $item[7],
                                 'campaign_end_date' => $item[8],
