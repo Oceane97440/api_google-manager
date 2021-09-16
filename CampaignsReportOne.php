@@ -216,6 +216,16 @@ $serviceFactory = new ServiceFactory();
             
                 );
 
+                $arrayCorrespondance2 = array(
+                    '480 x 320' => 'INTERSTITIEL ',
+                    '1024 x 768' => 'INTERSTITIEL',
+                    '768 x 1024' => 'INTERSTITIEL',
+                    '320 x 480' => 'INTERSTITIEL',
+                    '320 x 50' => 'MASTHEAD'
+        
+                
+                    );
+
 
 
                 $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
@@ -241,7 +251,7 @@ $serviceFactory = new ServiceFactory();
                                     'campaign_id '=> $item[0],
                                     'campaign_name' => $item[1],
                                     'format_id'=>  $arrayCorrespondance[$item[6]],
-                                    'format_name' => $item[3],
+                                    'format_name' => $arrayCorrespondance2[$item[6]],
                                     'creative_id' => $item[4],
                                     'creative_name' => $item[5],
                                     'creative_size' => $item[6],
