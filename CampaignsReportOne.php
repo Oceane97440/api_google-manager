@@ -203,22 +203,23 @@ $serviceFactory = new ServiceFactory();
 
         }
 */
-            $campaign_admanager_name = 'CANAL CBOX - 70063';
-            $campaign_admanager_id = '19554';
+            $campaign_admanager_name = 'ARIBEV - 69483';
+            $campaign_id_admanager = '1912738';
 
-            $arrayCorrespondance = array('480 x 320' => '79633',
-            '1024 x 768' => '44152',
-            '768 x 1024' => '44152',
-            '320 x 480' => '79633',
-
-        
-            );
+            $arrayCorrespondance = array(
+                '480 x 320' => '79633',
+                '1024 x 768' => '79633',
+                '768 x 1024' => '79633',
+                '320 x 480' => '79633',
+                '320 x 50' => '79637'
+    
             
+                );
 
 
 
-            $file_csv='./taskId/file-'.$campaign_admanager_name.'.csv';
-            if (file_exists($file_csv)) {
+                $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
+                if (file_exists($file_csv)) {
                 // Récupére l'ensemble du contenu du fichier
                 $data = file_get_contents($file_csv);
                
@@ -257,7 +258,7 @@ $serviceFactory = new ServiceFactory();
                             echo $myJSON;
 
 
-                            $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_admanager_id.".json", $myJSON); 
+                            $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_id_admanager.".json", $myJSON); 
                         }
 
                     }
