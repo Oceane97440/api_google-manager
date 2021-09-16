@@ -1,0 +1,74 @@
+{
+    "interstitiel": {
+        "formatKey": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "siteList": {
+            "0": {
+
+                "site": "ANTENNEREUNION (APP)",
+                "impressions": "46",
+                "clicks": "2",
+                "ctr": "0.0435"
+        
+              
+            },
+            "1": {
+                "site": "ANTENNEREUNION (APP)",
+                "impressions": "22",
+                "clicks": "2",
+                "ctr": "0.0909"
+            }
+        }
+    },
+    "masthead": {
+        "formatKey": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "siteList": {
+            "0": {
+                "site": "ANTENNEREUNION (APP)",
+                "impressions": "79",
+                "clicks": "11",
+                "ctr": "0.1392"
+            },
+            "1": {
+                "site": "ANTENNEREUNION (APP)",
+                "impressions": "820",
+                "clicks": "37",
+                "ctr": "0.0451"
+            }
+        }
+    },
+    "campaign": {
+        "campaign_id": 2872018260,
+        "campaign_name": "ARIBEV - 69483",
+        "campaign_start_date": "2021-06-16T12:31:00+04:00",
+        "campaign_end_date": "2021-06-22T23:59:00+04:00",
+        "impressions": 6883,
+        "clicks": 250,
+        "ctr": "0.04"
+    }
+}

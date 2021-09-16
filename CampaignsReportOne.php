@@ -203,8 +203,8 @@ $serviceFactory = new ServiceFactory();
 
         }
 */
-           // $campaign_admanager_name = 'CANAL CBOX - 70063';
-           // $campaign_id_admanager = '1921947';
+            //$campaign_admanager_name = 'CANAL CBOX - 70063';
+            //$campaign_id_admanager = '1921947';
            $campaign_admanager_name = 'ARIBEV - 69483';
             $campaign_id_admanager =  1912738;
 
@@ -241,13 +241,13 @@ $serviceFactory = new ServiceFactory();
 
                     // Créer un tableau à partir d'un string                   
                     if(count($out) > 0) {
-                        
+
                         foreach($out[0] as $key => $item):
                             if(!empty($item) and ($key > 0)) {
                                 $dataArray[] = explode(',',$item);
                             }
                         endforeach;
-                       
+
                         if(!empty($dataArray)) {
 
                             //initialise les array somme impression et somme click
@@ -261,14 +261,18 @@ $serviceFactory = new ServiceFactory();
                                 $sumAll[] = $item[9];
                                 $clicksAll[] = $item[10];
 
+
                                 // si le format est un INTERSTITIEL
-                                if ($arrayCorrespondance2[$item[6]] === "INTERSTITIEL") {
+                                if ($arrayCorrespondance[$item[6]] === "79633") {
+                                    var_dump($item);
+
                                      //on recupére et on fait la somme global impression/click de l'INTERSTITIEL
 
                                      $sumInterstitielImpressions[] = $item[9];
+
                                      $sumInterstitielClicks[] = $item[10];
                                 }
-                                if ($arrayCorrespondance2[$item[6]] === "MASTHEAD") { 
+                                if ($arrayCorrespondance[$item[6]] === "79637") { 
                                      //on recupére et on fait la somme global impression/click de l'MASTHEAD
 
                                     $sumMastheadImpressions[] = $item[9];
@@ -279,6 +283,7 @@ $serviceFactory = new ServiceFactory();
                             // Créer l'object Interstitiel
                             if(!empty($sumInterstitielImpressions) && !empty($sumInterstitielClicks)) {
                                 $sumInterstitielImpressionsTotal = array_sum($sumInterstitielImpressions);
+                                var_dump($sumInterstitielImpressionsTotal);
                                 $sumInterstitielClicksTotal = array_sum($sumInterstitielClicks);
                                 $sumInterstitielCTR = round(($sumInterstitielClicksTotal/$sumInterstitielImpressionsTotal),2);
 
