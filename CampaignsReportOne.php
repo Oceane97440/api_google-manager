@@ -246,8 +246,22 @@ $serviceFactory = new ServiceFactory();
                         endforeach;
                        
                         if(!empty($dataArray)) {
+
+
+                            $sumAll = array();
+                            $clicksAll = array();
+                            $interstitielKey = array();
+                            $mastheadKey = array();
+
+
+
+
+
+
                             foreach($dataArray as $key => $item):
-                                $myObj[] = array(
+
+                                var_dump($key);
+                                /*$myObj[] = array(
                                     'campaign_id '=> $item[0],
                                     'campaign_name' => $item[1],
                                     'format_id'=>  $arrayCorrespondance[$item[6]],
@@ -260,8 +274,72 @@ $serviceFactory = new ServiceFactory();
                                     'impressions' => $item[9],
                                     'clicks' => $item[10],
                                     'ctr' => $item[11]
-                                );
+                                );*/
+
+                                $sumAll[]=$item[9];
+                                $clicksAll[]=$item[10];
+
+
+                      
+
+                                if ($arrayCorrespondance2[$item[6]] === "INTERSTITIEL") {
+
+                                    $interstitielKey[]=$key;
+
+                                    $myObj['interstitiel']['formatKey'] = $interstitielKey;       
+
+                                
+                                    $myObj['interstitiel']['siteList'][$key] = array(
+                                    
+                                        'site' =>"ANTENNEREUNION (APP)",
+                                        'impressions' => $item[9],
+                                        'clicks' => $item[10],
+                                        'ctr' => $item[11]
+                                    );
+
+                                }
+                                if ($arrayCorrespondance2[$item[6]] === "MASTHEAD") {
+
+                                    $mastheadKey[]=$key;
+
+                                    $myObj['masthead']['formatKey'] = $mastheadKey;             
+
+                                    $myObj['masthead']['siteList'][$key] = array(
+                                    
+                                        'site' =>"ANTENNEREUNION (APP)",
+                                        'impressions' => $item[9],
+                                        'clicks' => $item[10],
+                                        'ctr' => $item[11]
+                                    );
+
+                                }
+
+
                             endforeach;
+
+      
+
+
+                            $impressions_global = array_sum($sumAll);
+                                                        
+                            $clicks_global = array_sum($clicksAll);
+
+                            $ctr_global = ($clicks_global / $impressions_global);
+
+                            
+                            $myObj['campaign'] = array(
+                                'campaign_id '=> $item[0],
+                                'campaign_name' => $item[1],
+                                'campaign_start_date' => $item[7],
+                                'campaign_end_date' => $item[8],
+                                'impressions' => $impressions_global,
+                                'clicks' => $clicks_global,
+                                'ctr' => number_format($ctr_global, 2, '.', '')
+                            );
+
+
+
+
                             
                             $myJSON = json_encode($myObj);
 
@@ -274,7 +352,7 @@ $serviceFactory = new ServiceFactory();
                     }
 
 
-                    
+
                    
 
                 }
