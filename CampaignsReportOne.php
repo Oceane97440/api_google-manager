@@ -203,8 +203,10 @@ $serviceFactory = new ServiceFactory();
 
         }
 */
-            $campaign_admanager_name = 'CANAL CBOX - 70063';
-            $campaign_id_admanager = '1921947';
+           // $campaign_admanager_name = 'CANAL CBOX - 70063';
+           // $campaign_id_admanager = '1921947';
+           $campaign_admanager_name = 'ARIBEV - 69483';
+            $campaign_id_admanager =  1912738;
 
             $arrayCorrespondance = array(
                 '480 x 320' => '79633',
@@ -239,6 +241,7 @@ $serviceFactory = new ServiceFactory();
 
                     // Créer un tableau à partir d'un string                   
                     if(count($out) > 0) {
+                        
                         foreach($out[0] as $key => $item):
                             if(!empty($item) and ($key > 0)) {
                                 $dataArray[] = explode(',',$item);
@@ -247,85 +250,73 @@ $serviceFactory = new ServiceFactory();
                        
                         if(!empty($dataArray)) {
 
-
+                            //initialise les array somme impression et somme click
                             $sumAll = array();
                             $clicksAll = array();
-                            $interstitielKey = array();
-                            $mastheadKey = array();
 
-
-
-
-
-
+                            //on parcours le tableau
                             foreach($dataArray as $key => $item):
 
-                                var_dump($key);
-                                /*$myObj[] = array(
-                                    'campaign_id '=> $item[0],
-                                    'campaign_name' => $item[1],
-                                    'format_id'=>  $arrayCorrespondance[$item[6]],
-                                    'format_name' => $arrayCorrespondance2[$item[6]],
-                                    'creative_id' => $item[4],
-                                    'creative_name' => $item[5],
-                                    'creative_size' => $item[6],
-                                    'campaign_start_date' => $item[7],
-                                    'campaign_end_date' => $item[8],
-                                    'impressions' => $item[9],
-                                    'clicks' => $item[10],
-                                    'ctr' => $item[11]
-                                );*/
+                                //on recupére chaque impression et clicks puis push dans un array
+                                $sumAll[] = $item[9];
+                                $clicksAll[] = $item[10];
 
-                                $sumAll[]=$item[9];
-                                $clicksAll[]=$item[10];
-
-
-                      
-
+                                // si le format est un INTERSTITIEL
                                 if ($arrayCorrespondance2[$item[6]] === "INTERSTITIEL") {
+                                     //on recupére et on fait la somme global impression/click de l'INTERSTITIEL
 
-                                    $interstitielKey[]=$key;
-
-                                    $myObj['interstitiel']['formatKey'] = $interstitielKey;       
-
-                                
-                                    $myObj['interstitiel']['siteList'][$key] = array(
-                                    
-                                        'site' =>"ANTENNEREUNION (APP)",
-                                        'impressions' => $item[9],
-                                        'clicks' => $item[10],
-                                        'ctr' => $item[11]
-                                    );
-
+                                     $sumInterstitielImpressions[] = $item[9];
+                                     $sumInterstitielClicks[] = $item[10];
                                 }
-                                if ($arrayCorrespondance2[$item[6]] === "MASTHEAD") {
+                                if ($arrayCorrespondance2[$item[6]] === "MASTHEAD") { 
+                                     //on recupére et on fait la somme global impression/click de l'MASTHEAD
 
-                                    $mastheadKey[]=$key;
-
-                                    $myObj['masthead']['formatKey'] = $mastheadKey;             
-
-                                    $myObj['masthead']['siteList'][$key] = array(
-                                    
-                                        'site' =>"ANTENNEREUNION (APP)",
-                                        'impressions' => $item[9],
-                                        'clicks' => $item[10],
-                                        'ctr' => $item[11]
-                                    );
-
+                                    $sumMastheadImpressions[] = $item[9];
+                                    $sumMastheadClicks[] = $item[10];
                                 }
-
-
                             endforeach;
 
-      
+                            // Créer l'object Interstitiel
+                            if(!empty($sumInterstitielImpressions) && !empty($sumInterstitielClicks)) {
+                                $sumInterstitielImpressionsTotal = array_sum($sumInterstitielImpressions);
+                                $sumInterstitielClicksTotal = array_sum($sumInterstitielClicks);
+                                $sumInterstitielCTR = round(($sumInterstitielClicksTotal/$sumInterstitielImpressionsTotal),2);
 
+                                $myObj['interstitiel'] = array(                                    
+                                    'impressions' =>  $sumInterstitielImpressionsTotal,
+                                    'clicks' => $sumInterstitielClicksTotal,
+                                    'ctr' => $sumInterstitielCTR,
+                                    'siteList' => array(                                    
+                                                        'site' =>"ANTENNEREUNION (APP)",
+                                                        'impressions' =>  $sumInterstitielImpressionsTotal,
+                                                        'clicks' => $sumInterstitielClicksTotal,
+                                                        'ctr' =>$sumInterstitielCTR
+                                                    )
+                                );     
+                            }
 
-                            $impressions_global = array_sum($sumAll);
-                                                        
+                            // Créer l'object Masthead
+                            if(!empty($sumMastheadImpressions) && !empty($sumMastheadClicks)) {
+                                $sumMastheadImpressionsTotal = array_sum($sumMastheadImpressions);
+                                $sumMastheadClicksTotal = array_sum($sumMastheadClicks);
+                                $sumMastheadCTR = round(($sumMastheadClicksTotal/$sumMastheadImpressionsTotal),2);
+                                
+                                $myObj['masthead'] = array(        
+                                    'impressions' => $sumMastheadImpressionsTotal,
+                                    'clicks' => $sumMastheadClicksTotal,
+                                    'ctr' => $sumInterstitielCTR,
+                                    'siteList' => array(                                    
+                                        'site' =>"ANTENNEREUNION (APP)",
+                                        'impressions' => $sumMastheadImpressionsTotal,
+                                        'clicks' => $sumMastheadClicksTotal,
+                                        'ctr' => $sumInterstitielCTR
+                                    )
+                                );                              
+                            }
+     
+                            $impressions_global = array_sum($sumAll);                                                        
                             $clicks_global = array_sum($clicksAll);
-
-                            $ctr_global = ($clicks_global / $impressions_global);
-
+                            $ctr_global = round(($clicks_global / $impressions_global),2);
                             
                             $myObj['campaign'] = array(
                                 'campaign_id'=> $item[0],
@@ -334,18 +325,12 @@ $serviceFactory = new ServiceFactory();
                                 'campaign_end_date' => $item[8],
                                 'impressions' => $impressions_global,
                                 'clicks' => $clicks_global,
-                                'ctr' => number_format($ctr_global, 2, '.', '')
+                                'ctr' => $ctr_global
+                               // 'ctr' => number_format($ctr_global, 2, '.', '')
                             );
-
-
-
-
                             
                             $myJSON = json_encode($myObj);
-
                             echo $myJSON;
-
-
                             $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_id_admanager.".json", $myJSON); 
                         }
 

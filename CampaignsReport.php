@@ -225,7 +225,7 @@ while ($donnees = $req->fetch())
 
 
 
-        $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
+       /* $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
 
         $row = 1;
         if (($handle = fopen($file_csv, "r")) !== FALSE) {
@@ -258,7 +258,7 @@ while ($donnees = $req->fetch())
 
         fclose($handle);
 
-        }
+        }*/
         
         
 
