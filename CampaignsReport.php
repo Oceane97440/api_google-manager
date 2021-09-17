@@ -103,6 +103,14 @@ while ($donnees = $req->fetch())
             [
                 Dimension::ORDER_ID,
                 Dimension::ORDER_NAME,
+                  //format id format_name
+                  Dimension::PLACEMENT_ID,
+                  Dimension::PLACEMENT_NAME,
+                  //recupération data creative 
+                  Dimension::CREATIVE_ID,
+                  Dimension::CREATIVE_NAME,
+                //  Dimension::CREATIVE_TYPE,
+                  Dimension::CREATIVE_SIZE,
   
             ]
         );
