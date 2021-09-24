@@ -25,10 +25,13 @@ $arrayCorrespondance = array(
     
         );
 
+        $path = 'data/json';
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
 
-
-
-foreach (glob('taskId/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
+       
+foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
 
     echo "$file_csv occupe " . filesize($file_csv) . "<br />\n";
 
@@ -130,6 +133,7 @@ foreach (glob('taskId/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
                     $impressions_global = array_sum($sumAll);                                                        
                     $clicks_global = array_sum($clicksAll);
                     $ctr_global = round(($clicks_global / $impressions_global),2);
+                    $reporting_start_date = date('Y-m-d H:i:s');
                     
                     $myObj['campaign'] = array(
                         'campaign_id'=> $item[0],
@@ -138,13 +142,14 @@ foreach (glob('taskId/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
                         'campaign_end_date' => $item[8],
                         'impressions' => $impressions_global,
                         'clicks' => $clicks_global,
-                        'ctr' => $ctr_global
+                        'ctr' => $ctr_global,
+                        'reporting_start_date' => $reporting_start_date
                        // 'ctr' => number_format($ctr_global, 2, '.', '')
                     );
                     
                     $myJSON = json_encode($myObj);
                     echo $myJSON;
-                    $bytes = file_put_contents("./taskId/json/".$campaign_id_admanager.".json", $myJSON); 
+                    $bytes = file_put_contents("./data/json/".$campaign_id_admanager.".json", $myJSON); 
                 }
 
             }

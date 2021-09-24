@@ -193,7 +193,8 @@ while ($donnees = $req->fetch())
         );
 
 
-        $path = 'taskId';
+
+        $path = 'data/csv/'.date('Y/m/d');
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
@@ -225,32 +226,12 @@ while ($donnees = $req->fetch())
 
         if (file_exists($file_exist)) {
 
-            rename($file_exist,'./taskId/campaignID-'.$campaign_id_admanager.'.csv');
+            rename($file_exist,'./data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv');
             unlink($file_name);
         }
 
 
-
-
-
-        $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
-
-        $row = 1;
-        if (($handle = fopen($file_csv, "r")) !== FALSE) {
-
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $num = count($data);
-              
-                var_dump($data);
- 
-                
-            }
-  
-
-
-        fclose($handle);
-
-        }
+        
         
         
 
