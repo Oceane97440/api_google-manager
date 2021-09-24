@@ -233,7 +233,7 @@ while ($donnees = $req->fetch())
 
 
 
-       /* $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
+        $file_csv='./taskId/campaignID-'.$campaign_id_admanager.'.csv';
 
         $row = 1;
         if (($handle = fopen($file_csv, "r")) !== FALSE) {
@@ -241,24 +241,8 @@ while ($donnees = $req->fetch())
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
               
-                $row++;
-             
-                    $myObj = new stdClass();
-                    $myObj->campaign_id = $data[0];
-                    $myObj->campaign_name = $data[1];
-                    $myObj->campaign_start_date = $data[2];
-                    $myObj->campaign_end_date = $data[3];
-                    $myObj->impressions = $data[4];
-                    $myObj->clicks = $data[5];
-                    $myObj->ctr = $data[6];
-
-
-
-                    $myJSON = json_encode($myObj);
-
-                    echo $myJSON;
-
-                    $bytes = file_put_contents("./taskId/json/campaignID-".$campaign_id_admanager, $myJSON); 
+                var_dump($data);
+ 
                 
             }
   
@@ -266,7 +250,7 @@ while ($donnees = $req->fetch())
 
         fclose($handle);
 
-        }*/
+        }
         
         
 
