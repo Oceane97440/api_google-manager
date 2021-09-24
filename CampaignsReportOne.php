@@ -203,10 +203,10 @@ $serviceFactory = new ServiceFactory();
 
         }
 */
-            //$campaign_admanager_name = 'CANAL CBOX - 70063';
-            //$campaign_id_admanager = '1921947';
-           $campaign_admanager_name = 'ARIBEV - 69483';
-            $campaign_id_admanager =  1912738;
+            $campaign_admanager_name = 'CANAL CBOX - 70063';
+            $campaign_id_admanager = '1921947';
+           //$campaign_admanager_name = 'ARIBEV - 69483';
+            //$campaign_id_admanager =  1912738;
 
             $arrayCorrespondance = array(
                 '480 x 320' => '79633',

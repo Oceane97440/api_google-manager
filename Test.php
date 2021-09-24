@@ -1,22 +1,32 @@
 <?php
-include('./includes/config.php');
 
 
-$last_3_month = date("Y-m-d",strtotime("-3 month"));
+$file_csv='./proxy_error_log';
+$data = file_get_contents($file_csv);
+if(!empty($data) && (preg_match_all('(.*)',$data,$out) )) {
 
-$req=$bdd->prepare('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= ?
-GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
-ORDER BY `asb_campaigns`.`campaign_name` ASC');
+    $dataArray = array();
 
-$req->execute(array($last_3_month));
+        // Créer un tableau à partir d'un string                   
+        if(count($out) > 0) {
 
+            foreach($out[0] as $key => $item):
+                if(!empty($item) and ($key > 0)) {
+                    $dataArray[] = explode(',',$item);
+                }
+            endforeach;
 
+            if(!empty($dataArray)) {
 
+                //var_dump(end($dataArray));
+                var_dump($dataArray);
 
-$donnees=$req->fetch();
+   
+            }
 
+        }        
 
-echo $donnees['campaign_id'];
+}
 
 
 ?>
