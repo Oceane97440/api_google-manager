@@ -1,13 +1,29 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+ini_set('max_execution_time', 0);
 
-require 'vendor/autoload.php';
+require ('vendor/autoload.php');
+
 use Google\AdsApi\AdManager\v202108\DateTime;
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\AdManager\Util\v202108\StatementBuilder;
 use Google\AdsApi\AdManager\v202108\ServiceFactory;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
-include('./includes/config.php');
+
+include('includes/config.php');
+
+$last_3_month =  date("Y-m-d",strtotime("-3 month"));
+
+$req=$bdd->prepare('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= ?
+GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
+ORDER BY `asb_campaigns`.`campaign_name` ASC');
+$req->execute(array($last_3_month));
+
+$donnees = $req->fetch();
+
+var_dump($donnees);
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())

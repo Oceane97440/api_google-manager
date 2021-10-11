@@ -1,8 +1,7 @@
 <?php
 ini_set('max_execution_time', 0);
 
-include('./includes/config.php');
-require 'vendor/autoload.php';
+require ('vendor/autoload.php');
 
 use Google\AdsApi\AdManager\Util\v202108\AdManagerDateTimes;
 use Google\AdsApi\AdManager\AdManagerSession;
@@ -23,6 +22,8 @@ use Google\AdsApi\AdManager\v202108\DateRangeType;
 use Google\AdsApi\AdManager\v202108\Dimension;
 use Google\AdsApi\AdManager\v202108\DimensionAttribute;
 use Google\AdsApi\AdManager\v202108\ReportQuery;
+include('includes/config.php');
+
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
