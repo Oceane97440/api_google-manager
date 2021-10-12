@@ -94,9 +94,9 @@ foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
                     // Créer l'object Interstitiel
                     if(!empty($sumInterstitielImpressions) && !empty($sumInterstitielClicks)) {
                         $sumInterstitielImpressionsTotal = array_sum($sumInterstitielImpressions);
-                        var_dump($sumInterstitielImpressionsTotal);
                         $sumInterstitielClicksTotal = array_sum($sumInterstitielClicks);
-                        $sumInterstitielCTR = round(($sumInterstitielClicksTotal/$sumInterstitielImpressionsTotal),2);
+                        $sumInterstitielCTR = round(($sumInterstitielClicksTotal/$sumInterstitielImpressionsTotal*100),2);
+                        echo  $sumInterstitielCTR ;
 
                         $myObj['interstitiel'] = array(                                    
                             'impressions' =>  $sumInterstitielImpressionsTotal,
@@ -115,7 +115,8 @@ foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
                     if(!empty($sumMastheadImpressions) && !empty($sumMastheadClicks)) {
                         $sumMastheadImpressionsTotal = array_sum($sumMastheadImpressions);
                         $sumMastheadClicksTotal = array_sum($sumMastheadClicks);
-                        $sumMastheadCTR = round(($sumMastheadClicksTotal/$sumMastheadImpressionsTotal),2);
+                        $sumMastheadCTR = round(($sumMastheadClicksTotal/$sumMastheadImpressionsTotal*100),2);
+                        echo  $sumMastheadCTR ;
                         
                         $myObj['masthead'] = array(        
                             'impressions' => $sumMastheadImpressionsTotal,
@@ -132,9 +133,10 @@ foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
 
                     $impressions_global = array_sum($sumAll);                                                        
                     $clicks_global = array_sum($clicksAll);
-                    $ctr_global = round(($clicks_global / $impressions_global),2);
+                    $ctr_global = round(($clicks_global / $impressions_global*100),2);
                     $reporting_start_date = date('Y-m-d H:i:s');
-                    
+                    echo  $ctr_global ;
+
                     $myObj['campaign'] = array(
                         'campaign_id'=> $item[0],
                         'campaign_name' => $item[1],
@@ -272,7 +274,7 @@ exit;
                                 $sumInterstitielImpressionsTotal = array_sum($sumInterstitielImpressions);
                                 var_dump($sumInterstitielImpressionsTotal);
                                 $sumInterstitielClicksTotal = array_sum($sumInterstitielClicks);
-                                $sumInterstitielCTR = round(($sumInterstitielClicksTotal/$sumInterstitielImpressionsTotal),2);
+                                $sumInterstitielCTR = round(($sumInterstitielClicksTotal/$sumInterstitielImpressionsTotal*100),2);
 
                                 $myObj['interstitiel'] = array(                                    
                                     'impressions' =>  $sumInterstitielImpressionsTotal,
@@ -291,7 +293,7 @@ exit;
                             if(!empty($sumMastheadImpressions) && !empty($sumMastheadClicks)) {
                                 $sumMastheadImpressionsTotal = array_sum($sumMastheadImpressions);
                                 $sumMastheadClicksTotal = array_sum($sumMastheadClicks);
-                                $sumMastheadCTR = round(($sumMastheadClicksTotal/$sumMastheadImpressionsTotal),2);
+                                $sumMastheadCTR = round(($sumMastheadClicksTotal/$sumMastheadImpressionsTotal *100),2);
                                 
                                 $myObj['masthead'] = array(        
                                     'impressions' => $sumMastheadImpressionsTotal,
@@ -308,7 +310,8 @@ exit;
      
                             $impressions_global = array_sum($sumAll);                                                        
                             $clicks_global = array_sum($clicksAll);
-                            $ctr_global = round(($clicks_global / $impressions_global),2);
+                            $ctr_global = round(($clicks_global / $impressions_global *100),2);
+                            var_dump($ctr_global);
                             
                             $myObj['campaign'] = array(
                                 'campaign_id'=> $item[0],
