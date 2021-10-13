@@ -123,7 +123,7 @@ foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
                             'clicks' => $sumMastheadClicksTotal,
                             'ctr' => $sumInterstitielCTR,
                             'siteList' => array(                                    
-                                'site' =>"ANTENNEREUNION (APP)",
+                                'site' =>"ANTENNEREUNION.FR (app)",
                                 'impressions' => $sumMastheadImpressionsTotal,
                                 'clicks' => $sumMastheadClicksTotal,
                                 'ctr' => $sumInterstitielCTR
