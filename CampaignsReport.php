@@ -40,7 +40,7 @@ $session = (new AdManagerSessionBuilder())
 $serviceFactory = new ServiceFactory();
 
 // Requête liste tous les campagnes SMART qui ont pour format (INTERSTITIEL , MASTHEAD)
-$last_3_month =  date("Y-m-d",strtotime("-3 month"));
+$last_3_month =  date("Y-m-d",strtotime("-2 month"));
 
 
 /*$req=$bdd->query('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= '.$last_3_month.'
@@ -82,6 +82,8 @@ while ($donnees = $req->fetch())
 
     $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
     $campaign_start_date = $campaign_admanager_exist['campaign_admanager_start_date'];
+    $campaign_end_date = $campaign_admanager_exist['campaign_admanager_end_date'];
+
     $campaign_id_admanager = $campaign_admanager_exist['campaign_id'];
 
 
@@ -158,7 +160,7 @@ while ($donnees = $req->fetch())
          $reportQuery->setEndDate(
             AdManagerDateTimes::fromDateTime(
                 new DateTime(
-                    'now',
+                    $campaign_end_date,
                     new DateTimeZone('America/New_York')
                 )
             )
