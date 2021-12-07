@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 ini_set('max_execution_time', 0);
 
 require ('vendor/autoload.php');
@@ -40,23 +42,13 @@ $session = (new AdManagerSessionBuilder())
 $serviceFactory = new ServiceFactory();
 
 // Requête liste tous les campagnes SMART qui ont pour format (INTERSTITIEL , MASTHEAD)
-$last_3_month =  date("Y-m-d",strtotime("-3 month"));
-
-
-/*$req=$bdd->query('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= '.$last_3_month.'
-GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
-ORDER BY `asb_campaigns`.`campaign_name` ASC');*/
-
+//$last_3_month =  date("Y-m-d",strtotime("-3 month"));
+$last_3_month = date("Y-n-j", strtotime("first day of previous month"));
 
 $req=$bdd->prepare('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= ?
 GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
 ORDER BY `asb_campaigns`.`campaign_name` ASC');
-$req->execute(array($last_3_month));
-/*
-SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= '2021-06-01 00:00:00'
-GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
-ORDER BY `asb_campaigns`.`campaign_name` ASC
-*/
+$req->execute(array('2021-12-01'));
 
 
 $donnees = $req->fetch();
@@ -82,6 +74,8 @@ while ($donnees = $req->fetch())
 
     $campaign_admanager_name = $campaign_admanager_exist['campaign_admanager_name'];
     $campaign_start_date = $campaign_admanager_exist['campaign_admanager_start_date'];
+	$campaign_end_date = $campaign_admanager_exist['campaign_admanager_end_date'];
+
     $campaign_id_admanager = $campaign_admanager_exist['campaign_id'];
 
 
@@ -158,7 +152,7 @@ while ($donnees = $req->fetch())
          $reportQuery->setEndDate(
             AdManagerDateTimes::fromDateTime(
                 new DateTime(
-                    'now',
+                    	'now',
                     new DateTimeZone('America/New_York')
                 )
             )
@@ -200,7 +194,7 @@ while ($donnees = $req->fetch())
             mkdir($path, 0777, true);
         }
 
-        $file_name='./campaignID-'.$campaign_id_admanager.'.csv.gz';
+        $file_name='campaignID-'.$campaign_id_admanager.'.csv.gz';
 
         //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
@@ -223,11 +217,11 @@ while ($donnees = $req->fetch())
         
         // lecture des fichiers csv
 
-        $file_exist = './campaignID-'.$campaign_id_admanager.'.csv';
+        $file_exist = 'campaignID-'.$campaign_id_admanager.'.csv';
 
         if (file_exists($file_exist)) {
 
-            rename($file_exist,'./data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv');
+            rename($file_exist,'data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv');
             unlink($file_name);
         }
 

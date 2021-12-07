@@ -14,7 +14,7 @@ use Google\AdsApi\Common\OAuth2TokenBuilder;
 
 include('includes/config.php');
 
-$last_3_month =  date("Y-m-d",strtotime("-3 month"));
+$last_3_month =  date("Y-n-j", strtotime("first day of previous month"));
 
 $req=$bdd->prepare('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= ?
 GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
@@ -78,8 +78,6 @@ printf(
                    $campaign_id= $order->getId();
                    $campaign_name= $order->getName();
                    $advertiser_id = $order->getadvertiserId();
-                   //$campaign_start_date =  $order->getstartDateTime();
-                   //$campaign_end_date =  $order->getendDateTime();
                    $campaign_status = $order->getstatus();
 
                 
@@ -100,6 +98,7 @@ printf(
                     );*/
                    
 
+                    //Recupère l'ensemble des campagne qui match avec les campagne de gam
                     $req_campaign=$bdd->prepare("SELECT*FROM asb_campaigns WHERE campaign_name=?");
                     $req_campaign->execute(array($campaign_name) );
                     $campaign_exist=$req_campaign->rowCount();
@@ -108,12 +107,21 @@ printf(
                     $campaign_start_date = $campaign_exist['campaign_start_date'];
                     $campaign_end_date = $campaign_exist['campaign_end_date'];
 
+                   //Test si la campaign_admanager_id existe
+                    $empty_campaign=$bdd->prepare(" SELECT campaign_admanager_id FROM asb_campaigns_admanager");
+                    $campaign_found=$empty_campaign->fetch();
+                    $found = $campaign_found['campaign_admanager_id'];
+
 
                     echo $campaign_id_smart .'-';
 
-                    $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,campaign_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_start_date,campaign_admanager_end_date,campaign_admanager_status) VALUES (?,?,?,?,?,?,?)');
-                    $getcampaigns ->execute(array($campaign_id,$campaign_id_smart,$advertiser_id,$campaign_name,$campaign_start_date,$campaign_end_date,$campaign_status));
-
+                    //si la campagne n'existe pas on ajout a la bdd
+                    if (!empty($found)) {
+                        $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,campaign_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_start_date,campaign_admanager_end_date,campaign_admanager_status) VALUES (?,?,?,?,?,?,?)');
+                        $getcampaigns ->execute(array($campaign_id,$campaign_id_smart,$advertiser_id,$campaign_name,$campaign_start_date,$campaign_end_date,$campaign_status));
+    
+                    }
+                 
 
 
                 

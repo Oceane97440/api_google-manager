@@ -16,7 +16,7 @@ $arrayCorrespondance = array(
     );
 
     $arrayCorrespondance2 = array(
-        '480 x 320' => 'INTERSTITIEL ',
+        '480 x 320' => 'INTERSTITIEL',
         '1024 x 768' => 'INTERSTITIEL',
         '768 x 1024' => 'INTERSTITIEL',
         '320 x 480' => 'INTERSTITIEL',
