@@ -1,6 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 ini_set('max_execution_time', 0);
-
 
 require 'vendor/autoload.php';
 
@@ -31,6 +32,7 @@ use Google\AdsApi\AdManager\v202108\DateRangeType;
 use Google\AdsApi\AdManager\v202108\Dimension;
 use Google\AdsApi\AdManager\v202108\DimensionAttribute;
 use Google\AdsApi\AdManager\v202108\ReportQuery;
+include('includes/config.php');
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
@@ -49,18 +51,58 @@ $networkService = $serviceFactory->createNetworkService($session);
 
 // Make a request
 $network = $networkService->getCurrentNetwork();
+//$last_3_month =  date("Y-m-d",strtotime("-3 month"));
+$last_date = date("Y-m-d",strtotime("-2 month"));
 
+$req=$bdd->prepare('SELECT MIN(campaign_admanager_start_date)FROM `asb_campaigns_admanager` WHERE campaign_admanager_start_date >= ?');
+$req->execute(array($last_date));
+
+
+$donnees = $req->fetch();
+$campaign_start_date = $donnees[0];
+
+var_dump($campaign_start_date);
 
 class RunSavedQuery
 {
 
+public function bdd() {
+   
+   
+    $last_date = date("Y-m-d",strtotime("-2 month"));
+
+    $req=$bdd->prepare('SELECT MIN(campaign_admanager_start_date)FROM `asb_campaigns_admanager` WHERE campaign_admanager_start_date >= ?');
+    $req->execute(array($last_date));
+   
+    $last_date = date("Y-m-d",strtotime("-2 month"));
+
+    $req=$bdd->prepare('SELECT MIN(campaign_admanager_start_date)FROM `asb_campaigns_admanager` WHERE campaign_admanager_start_date >= ?');
+    $req->execute(array($last_date));
+
+
+    $donnees = $req->fetch();
+    $campaign_start_date = $donnees[0];
+
+    return $campaign_start_date;
+
+    // var_dump($campaign_start_date);
+
+}
+
+
+
+
+
+
     //campagne_id de google ad manager
-    const ORDER_ID = '2877877606';
+    //const ORDER_ID = '2925179751';
+
+    const ORDER_DELIVERY_STATUS = 'STARTED';
 
     public static function runExample(
         ServiceFactory $serviceFactory,
-        AdManagerSession $session,
-        int $orderId
+        AdManagerSession $session
+        //int $orderId
     ) 
     {
         $reportService = $serviceFactory->createReportService($session);
@@ -79,6 +121,8 @@ class RunSavedQuery
                 Dimension::CREATIVE_NAME,
                 Dimension::CREATIVE_TYPE,
                 Dimension::CREATIVE_SIZE,
+
+
 
                 
 
@@ -102,38 +146,45 @@ class RunSavedQuery
 
             // Create statement to filter for an order.
             $statementBuilder = (new StatementBuilder())
-            ->where('ORDER_ID = :orderId')
+            ->where('ORDER_DELIVERY_STATUS = :orderDeliveryStatus')
+            ->withBindVariableValue(
+                'orderDeliveryStatus',
+               'STARTED'
+            );
+           /* ->where('ORDER_ID = :orderId')
             ->withBindVariableValue(
                 'orderId',
                 $orderId
-            );
+            );*/
   
+         
           // Set the filter statement.
         $reportQuery->setStatement($statementBuilder->toStatement());
 
-       // var_dump($reportQuery);
+        $campaign_start_date = bdd();
+                    // Set the start and end dates or choose a dynamic date range type.
+        $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
+        $reportQuery->setStartDate(
+            AdManagerDateTimes::fromDateTime(
+                new DateTime(
+                    $campaign_start_date,
+                    new DateTimeZone('America/New_York')
+                )
+            )
+                ->getDate()
+        );
 
-            // Set the start and end dates or choose a dynamic date range type.
-            $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
-               $reportQuery->setStartDate(
-                AdManagerDateTimes::fromDateTime(
-                       new DateTime(
-                           '-10 days'//,
-                          // new DateTimeZone('America/New_York')
-                       )
-                   )
-                       ->getDate()
-               );
-               $reportQuery->setEndDate(
-                AdManagerDateTimes::fromDateTime(
-                       new DateTime(
-                           'now'//,
-                          // new DateTimeZone('America/New_York')
-                       )
-                   )
-                       ->getDate()
-               );
-        
+         $reportQuery->setEndDate(
+            AdManagerDateTimes::fromDateTime(
+                new DateTime(
+                    	'now',
+                    new DateTimeZone('America/New_York')
+                )
+            )
+                ->getDate()
+        );
+        var_dump($reportQuery);
+
 
         // Create report job and start it.
       $reportJob = new ReportJob();
@@ -213,9 +264,10 @@ class RunSavedQuery
          $file_csv='./taskId/file.csv';
 
         if (file_exists($file_csv)) {
-            $handle = fopen($file_csv, "r");
-            $data = fgetcsv($handle);
-          //  var_dump($data);  
+           // $handle = fopen($file_csv, "r");
+            //$data = fgetcsv($handle);
+           // var_dump($data[0]);  
+          //  exit;
             //renvoi la data en json     
             // echo json_encode($data);
 
@@ -230,8 +282,14 @@ class RunSavedQuery
             }
             // Définir le chemin d'accès au fichier CSV
             $csv = $file_csv;
+    
             $csv = read($csv);
-            echo json_encode($csv);
+           // var_dump($csv[0]);  
+            //  exit;
+            $o = json_encode($csv);
+
+            var_dump($o[0]);  
+             exit;
 
         }
 
@@ -250,7 +308,7 @@ class RunSavedQuery
         self::runExample(
             new ServiceFactory(),
             $session,
-            intval(self::ORDER_ID)
+            intval(self::ORDER_DELIVERY_STATUS)
         );
     }
 }
