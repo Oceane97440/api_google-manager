@@ -1,8 +1,11 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 ini_set('max_execution_time', 0);
 
+require ('vendor/autoload.php');
 
-require 'vendor/autoload.php';
+use Google\AdsApi\AdManager\Util\v202108\AdManagerDateTimes;
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\AdManager\v202108\ApiException;
@@ -21,6 +24,8 @@ use Google\AdsApi\AdManager\v202108\DateRangeType;
 use Google\AdsApi\AdManager\v202108\Dimension;
 use Google\AdsApi\AdManager\v202108\DimensionAttribute;
 use Google\AdsApi\AdManager\v202108\ReportQuery;
+include('includes/config.php');
+
 
 // Generate a refreshable OAuth2 credential for authentication.
 $oAuth2Credential = (new OAuth2TokenBuilder())
@@ -35,50 +40,87 @@ $session = (new AdManagerSessionBuilder())
 
 // Get a service.
 $serviceFactory = new ServiceFactory();
-$networkService = $serviceFactory->createNetworkService($session);
 
-// Make a request
-$network = $networkService->getCurrentNetwork();
-/*printf(
-    "Network with code %d and display name '%s' was found.\n",
-    $network->getNetworkCode(),
-    $network->getDisplayName()
-);*/
 
-class RunSavedQuery
-{
+$last_date = date("Y-m-d",strtotime("-2 month"));
 
-    const SAVED_QUERY_ID = '12304979660';
+$req=$bdd->prepare('SELECT MIN(campaign_admanager_start_date)FROM `asb_campaigns_admanager` WHERE campaign_admanager_start_date >= ?');
+$req->execute(array($last_date));
 
-    public static function runExample(
-        ServiceFactory $serviceFactory,
-        AdManagerSession $session,
-        int $savedQueryId
-    ) 
-    {
+
+$donnees = $req->fetch();
+$campaign_start_date = $donnees[0];
+
+
+    
         $reportService = $serviceFactory->createReportService($session);
 
-        // Create statement to retrieve the saved query.
-        $statementBuilder = (new StatementBuilder())->where('id = :id')
-            ->orderBy('id ASC')
-            ->limit(1)
-            ->withBindVariableValue('id', $savedQueryId);
-
-        $savedQueryPage = $reportService->getSavedQueriesByStatement(
-            $statementBuilder->toStatement()
-        );
-        $savedQuery = $savedQueryPage->getResults()[0];
-
-        if ($savedQuery->getIsCompatibleWithApiVersion() === false) {
-            throw new UnexpectedValueException(
-               print('The saved query is not compatible with this API version.')
-            );
-        }else{
-          //  print('Request ready');
+        $reportQuery = new ReportQuery();
+        $reportQuery->setDimensions(
+            [
+                Dimension::ORDER_ID,
+                Dimension::ORDER_NAME,
+                  //format id format_name
+                  Dimension::PLACEMENT_ID,
+                  Dimension::PLACEMENT_NAME,
+                  //recupération data creative 
+                  Dimension::CREATIVE_ID,
+                  Dimension::CREATIVE_NAME,
+                //  Dimension::CREATIVE_TYPE,
+                  Dimension::CREATIVE_SIZE,
   
-        } 
-        $reportQuery = $savedQuery->getReportQuery();
+            ]
+        );
+        $reportQuery->setDimensionAttributes(
+            [
+                DimensionAttribute::ORDER_START_DATE_TIME,
+                DimensionAttribute::ORDER_END_DATE_TIME
+            ]
+        );
+        $reportQuery->setColumns(
+            [
+                Column::AD_SERVER_IMPRESSIONS,
+                Column::AD_SERVER_CLICKS,
+                Column::AD_SERVER_CTR,
 
+            ]
+        );
+
+            // Create statement to filter for an order.
+            $statementBuilder = (new StatementBuilder())
+            ->where('ORDER_DELIVERY_STATUS = :orderDeliveryStatus')
+            ->withBindVariableValue(
+                'orderDeliveryStatus',
+               'STARTED'
+            );
+   
+           // Set the filter statement.
+         $reportQuery->setStatement($statementBuilder->toStatement());
+  
+        // Set the start and end dates or choose a dynamic date range type.
+        $reportQuery->setDateRangeType(DateRangeType::CUSTOM_DATE);
+       
+        $reportQuery->setStartDate(
+            AdManagerDateTimes::fromDateTime(
+                new DateTime(
+                    $campaign_start_date,
+                    new DateTimeZone('America/New_York')
+                )
+            )
+                ->getDate()
+        );
+
+         $reportQuery->setEndDate(
+            AdManagerDateTimes::fromDateTime(
+                new DateTime(
+                    	'now',
+                    new DateTimeZone('America/New_York')
+                )
+            )
+                ->getDate()
+        );
+
+        
         // Create report job and start it.
       $reportJob = new ReportJob();
       $reportJob->setReportQuery($reportQuery);
@@ -93,29 +135,27 @@ class RunSavedQuery
         $reportJob->getId()
     );
 
+    $campaign_id_admanager = 'fileAll';
 
-
-    if ($reportDownloader->waitForReportToFinish()) {
+if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
+        
+       $filePath = sprintf('campaignID-'.$campaign_id_admanager.'.csv.gz');
 
-        $filePath = sprintf('file.csv.gz');
-
-       // printf("Downloading report to %s ...%s", $filePath, PHP_EOL);
         // Download the report.
         $reportDownloader->downloadReport(
             ExportFormat::CSV_DUMP,
             $filePath
         );
 
-       // print "done.\n";
 
-        
-        $path = 'taskId/'.date('Y/m/d/H');
+
+        $path = 'data/csv/'.date('Y/m/d');
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
 
-        $file_name='./file.csv.gz';
+        $file_name='campaignID-'.$campaign_id_admanager.'.csv.gz';
 
         //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
@@ -135,68 +175,66 @@ class RunSavedQuery
         fclose($out_file);
         gzclose($file);
 
+        
+        // lecture des fichiers csv
 
-        $file_exist = './file.csv';
+        $file_exist = 'campaignID-'.$campaign_id_admanager.'.csv';
+
         if (file_exists($file_exist)) {
 
-        rename('./file.csv','./taskId/file.csv');
-        unlink('./file.csv.gz');
+            rename($file_exist,'data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv');
+            unlink($file_name);
 
 
-        }
 
-     
-  
-
-    } else {
-        print "Report failed.\n";
-    }
-
-         $file_csv='./taskId/file.csv';
-
-        if (file_exists($file_csv)) {
-            $handle = fopen($file_csv, "r");
-            $data = fgetcsv($handle);
-          //  var_dump($data);  
-            //renvoi la data en json     
-            // echo json_encode($data);
-
-
-            function read($csv){
-                $file = fopen($csv, 'r');
-                while (!feof($file) ) {
-                    $line[] = fgetcsv($file, 1024);
+            $file_csv = 'data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv';
+                function read($csv){
+                    $file = fopen($csv, 'r');
+                    while (!feof($file) ) {
+                        $line[] = fgetcsv($file, 1024);
+                    }
+                    fclose($file);
+                    return $line;
                 }
-                fclose($file);
-                return $line;
-            }
-            // Définir le chemin d'accès au fichier CSV
-            $csv = $file_csv;
-            $csv = read($csv);
-            echo json_encode($csv);
-
+                // Définir le chemin d'accès au fichier CSV
+                $csv = $file_csv;
+        
+                $csv = read($csv);
+              
+                $o = json_encode($csv);
+    
+                var_dump($o);  
+                 exit;
+    
+            
         }
 
-   
 
-    
-    }
+        
+        
+        
 
-    public static function main()
-    {
-        $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()
-            ->build();
-        $session = (new AdManagerSessionBuilder())->fromFile()
-            ->withOAuth2Credential($oAuth2Credential)
-            ->build();
-        self::runExample(
-            new ServiceFactory(),
-            $session,
-            intval(self::SAVED_QUERY_ID)
-        );
-    }
+
+
 }
 
-RunSavedQuery::main();
 
 
+
+    
+     
+
+   
+    
+
+
+
+
+exit();
+
+
+
+    
+
+
+?>

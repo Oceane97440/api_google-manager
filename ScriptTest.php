@@ -1,36 +1,156 @@
-                               
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-ini_set('max_execution_time', 0);
+ // lecture des fichiers csv
+ $file_csv = 'data/csv/'.date('Y/m/d').'/campaignID-fileAll.csv';
 
-require("includes/config.php");
+ if (file_exists($file_csv)) {
+    $srcFile = new SplFileObject($file_csv);
+    foreach ($srcFile as $line) {
+        $item = explode(',',$line);
+     // var_dump($item);
+        if(count($item) > 1) {
+         $dataArray[] = $item;
+        }
+    }
+    $campaigns = array();
+    if(!empty($dataArray)) {
+        $columnKey = $dataArray[0];
+        $keyPrimary = $columnKey[0];      
+     //   echo $keyPrimary; exit;
+        foreach($dataArray as $k => $i) {
+            if((count($columnKey) === count($i)) && ($k != 0)) {              
+                $newItem = array(); 
+                          
+                for($y = 0; $y < count($i); $y++) {
+                   $newItem[trim($columnKey[$y])] = trim($i[$y]);
+                }
+            }
+            if(!empty($newItem) ) {
+                $valuePrimary = $newItem[$keyPrimary];
+                $campaigns[$valuePrimary][] = $newItem;
 
-$last_3_month =  date("Y-m-d",strtotime("-3 month"));
+               /* for ($i=0; $i < count($newItem); $i++) { 
+                    $fp = fopen('data/csv/'.date('Y/m/d').'/campaignID-'.$valuePrimary.'.csv', 'w');
+
+                 
+                }*/
+        
+            }       
+        }       
 
 
+        if (!empty($campaigns) && (count($campaigns) > 0)  ) {
 
+            foreach ($campaigns  as $key => $value){
 
-$req=$bdd->prepare('SELECT DISTINCT asb_insertions.campaign_id ,asb_campaigns.campaign_name FROM asb_insertions, asb_campaigns WHERE asb_insertions.format_id IN (79409,79633,44152) AND asb_insertions.campaign_id = asb_campaigns.campaign_id AND asb_campaigns.campaign_start_date >= ?
-GROUP BY asb_insertions.campaign_id , asb_insertions.format_id  
-ORDER BY `asb_campaigns`.`campaign_name` ASC');
-$req->execute(array($last_3_month));
+                echo $key;
 
-$donnees = $req->fetch();
+                $fp = fopen('data/csv/'.date('Y/m/d').'/campaignID-'.$key.'.csv', 'w');
 
-var_dump($donnees);
+                $array = array_keys($value[0]);
+               // fputcsv($fp,array_keys($value));
+                fputscsv($fp, $array);
 
+                var_dump(array_keys($value[0]));
 
-    $nom_file = "fichier.txt";
+                exit;
 
-    echo  $nom_file;
-    $texte =  $donnees['campaign_id'];
+                foreach ($value as $key0 => $value0) {
 
-    // création du fichier
-    $f = fopen($nom_file, "x+");
-    // écriture
-    fputs($f, $texte );
-    // fermeture
-    fclose($f);
+                    fputcsv($fp,$value0);
+
+                }
+
+                echo '  ------  ';
+
+               // echo $value[0];
+
+                var_dump( $value);
+
+                fclose($fp);
+
+            }
+            /*foreach ($campaigns as  $campaigns[$valuePrimary]) {
+
+                if (!empty($campaigns[$valuePrimary])) {
+    
+                    var_dump($campaigns[$valuePrimary]);
+    
+                    fputcsv($fp,$campaigns['2925179751']);
+    
+    
+                }
+            }*/
+            
+           // fclose($fp);
+
+        }
+
+   
+
+        
+
+        echo '<hr />';
+    }
+    /*
+    function read($csv){
+             $file = fopen($csv, 'r');
+             while (!feof($file) ) {
+                 $line[] = fgetcsv($file, 1024);
+             }
+             fclose($file);
+             return $line;
+         }
+         // Définir le chemin d'accès au fichier CSV
+         $csv = $file_csv;
+         $csv = read($csv);
+      //   $o = json_encode($csv);
+*/
+        // echo $o;  
+          exit;
+ }
 ?>
 
+<?php
+ // lecture des fichiers csv
+ $file_csv = 'campaignID-fileAll.csv';
+ if (file_exists($file_csv)) {
+    $srcFile = new SplFileObject($file_csv);
+    foreach ($srcFile as $line) {
+        $item = explode(',',$line);
+     // var_dump($item);
+        if(count($item) > 1) {
+         $dataArray[] = $item;
+        }
+    }
+    $campaigns = array();
+    if(!empty($dataArray)) {
+        $columnKey = $dataArray[0];
+        $keyPrimary = $columnKey[0]; 
+        foreach($dataArray as $k => $i) {
+            if((count($columnKey) === count($i)) && ($k != 0)) {              
+                $newItem = array(); 
+                for($y = 0; $y < count($i); $y++) {
+                   $newItem[trim($columnKey[$y])] = trim($i[$y]);
+                }
+            }
+            if(!empty($newItem) ) {
+                $valuePrimary = $newItem[$keyPrimary];
+                $campaigns[$valuePrimary][] = $newItem;
+            }       
+        }      
+        if (!empty($campaigns) && (count($campaigns) > 0)  ) {
+            foreach ($campaigns  as $key => $value){
+                echo $key;
+                $fp = fopen('campaignID-'.$key.'.csv', 'w');
+                $arrayLabels = array_keys($value[0]);
+               fputcsv($fp, $arrayLabels);
+                foreach ($value as $key0 => $value0) {
+                    fputcsv($fp,$value0);
+                }            
+                fclose($fp);
+            }         
+        }
+        echo '<hr />';
+    }
+ }
+?>
