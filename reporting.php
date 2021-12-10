@@ -135,12 +135,11 @@ $campaign_start_date = $donnees[0];
         $reportJob->getId()
     );
 
-    $campaign_id_admanager = 'fileAll';
 
 if ($reportDownloader->waitForReportToFinish()) {
         // Write to system temp directory by default.
         
-       $filePath = sprintf('campaignID-'.$campaign_id_admanager.'.csv.gz');
+       $filePath = sprintf('campaignID-fileAll.csv.gz');
 
         // Download the report.
         $reportDownloader->downloadReport(
@@ -155,7 +154,7 @@ if ($reportDownloader->waitForReportToFinish()) {
             mkdir($path, 0777, true);
         }
 
-        $file_name='campaignID-'.$campaign_id_admanager.'.csv.gz';
+        $file_name='campaignID-fileAll.csv.gz';
 
         //Fonction qui extrait le fichier csv du dossier comprésser
         //Raising this value may increase performance
@@ -175,39 +174,16 @@ if ($reportDownloader->waitForReportToFinish()) {
         fclose($out_file);
         gzclose($file);
 
-        
-        // lecture des fichiers csv
+        $file_exist = 'campaignID-fileAll.csv';
 
-        $file_exist = 'campaignID-'.$campaign_id_admanager.'.csv';
 
         if (file_exists($file_exist)) {
 
-            rename($file_exist,'data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv');
+            rename($file_exist,'data/csv/'.date('Y/m/d').'/campaignID-fileAll.csv');
             unlink($file_name);
-
-
-
-            $file_csv = 'data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id_admanager.'.csv';
-                function read($csv){
-                    $file = fopen($csv, 'r');
-                    while (!feof($file) ) {
-                        $line[] = fgetcsv($file, 1024);
-                    }
-                    fclose($file);
-                    return $line;
-                }
-                // Définir le chemin d'accès au fichier CSV
-                $csv = $file_csv;
-        
-                $csv = read($csv);
-              
-                $o = json_encode($csv);
-    
-                var_dump($o);  
-                 exit;
-    
-            
         }
+
+   
 
 
         
