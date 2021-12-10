@@ -1,4 +1,6 @@
 <?php
+include('includes/config.php');
+
  // lecture des fichiers csv
     // lecture des fichiers csv
     $file_csv = 'data/csv/'.date('Y/m/d').'/campaignID-fileAll.csv';
@@ -30,6 +32,18 @@
         if (!empty($campaigns) && (count($campaigns) > 0)  ) {
             foreach ($campaigns  as $key => $value){
                 echo $key;
+
+
+               /* $req2=$bdd->prepare(' SELECT campaign_id FROM `asb_campaigns_admanager` WHERE `campaign_admanager_id` = ?');
+                $req2->execute(array($key));
+
+
+                $data = $req2->fetch();
+                $campaign_id = $data[0];
+
+               var_dump($campaign_id);
+
+                $fp = fopen('data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id.'.csv', 'w');*/
                 $fp = fopen('data/csv/'.date('Y/m/d').'/campaignID-'.$key.'.csv', 'w');
                 $arrayLabels = array_keys($value[0]);
 
