@@ -222,7 +222,13 @@ if ($reportDownloader->waitForReportToFinish()) {
             foreach ($campaigns  as $key => $value){
                 echo $key;
 
-                $fp = fopen('data/csv/'.date('Y/m/d').'/campaignID-'.$key.'.csv', 'w');
+                 //Test si la campaign_admanager_id existe 
+                $empty_campaign=$bdd->prepare("SELECT * FROM asb_campaigns_admanager WHERE `campaign_admanager_id` = ?");
+                $empty_campaign->execute(array($key));
+                $campaign_found=$empty_campaign->fetch();
+                $campaign_id  = $campaign_found['campaign_id'];
+
+                $fp = fopen('data/csv/'.date('Y/m/d').'/campaignID-'.$campaign_id.'.csv', 'w');
                 $arrayLabels = array_keys($value[0]);
 
                 fputcsv($fp, $arrayLabels);

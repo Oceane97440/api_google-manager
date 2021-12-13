@@ -48,7 +48,7 @@ printf(
         $pageSize = StatementBuilder::SUGGESTED_PAGE_LIMIT;
         $statementBuilder = (new StatementBuilder())->orderBy('id ASC')
             ->where('isArchived = false')
-            ->limit($pageSize);
+            ->limit(1000);
 
         // Retrieve a small amount of orders at a time, paging
         // through until all orders have been retrieved.
@@ -73,18 +73,17 @@ printf(
 
                 
                    
-                   printf(
+                   /*printf(
                         "%d) Order with ID %d and name '%s' was found.%s advertiserId ",
 
                         $i++,
                         $order->getId(),
                         $order->getName(),
-                       // $order->getadvertiserId(),
-                       // $order->getstatus(),
+                        $order->getadvertiserId(),
 
 
                         PHP_EOL
-                    );
+                    );*/
                    
 
                     //Recupère l'ensemble des campagne qui match avec les campagne de gam
@@ -96,19 +95,24 @@ printf(
                     $campaign_start_date = $campaign_exist['campaign_start_date'];
                     $campaign_end_date = $campaign_exist['campaign_end_date'];
 
-                   //Test si la campaign_admanager_id existe
-                    $empty_campaign=$bdd->prepare(" SELECT campaign_admanager_id FROM asb_campaigns_admanager");
+                   //Test si la campaign_admanager_id existe 
+                    $empty_campaign=$bdd->prepare("SELECT campaign_admanager_id FROM asb_campaigns_admanager WHERE `campaign_admanager_id` = ?");
+                    $empty_campaign->execute(array($campaign_id));
                     $campaign_found=$empty_campaign->fetch();
-                    $found = $campaign_found['campaign_admanager_id'];
+                   $found = $campaign_found['campaign_admanager_id'];
 
 
-                    echo $campaign_id_smart .'-';
 
                     //si la campagne n'existe pas on ajout a la bdd
-                    if (!empty($found)) {
+                    if (empty($found)) {
+                        var_dump($found);
+
                         $getcampaigns = $bdd -> prepare('INSERT INTO asb_campaigns_admanager (campaign_admanager_id,campaign_id,advertiser_admanager_id,campaign_admanager_name,campaign_admanager_start_date,campaign_admanager_end_date,campaign_admanager_status) VALUES (?,?,?,?,?,?,?)');
                         $getcampaigns ->execute(array($campaign_id,$campaign_id_smart,$advertiser_id,$campaign_name,$campaign_start_date,$campaign_end_date,$campaign_status));
-    
+
+                     
+                    }else{
+                        echo 'Les campagnes ont été ajoutées'.'<hr>';
                     }
                  
 
