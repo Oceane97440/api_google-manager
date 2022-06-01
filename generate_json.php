@@ -18,8 +18,16 @@ $arrayCorrespondance = array(
     '"320x480 - PORSCHE"'=>'79633',
     '"480x320 - ETNIA"'=>'79633',
     '"1024x768 - ETNIA"'=>'79633',
-    '"1024x768 - PORSCHE"'=>'79633'
-
+    '"1024x768 - PORSCHE"'=>'79633',
+	"768 x 1024"=>'79633',
+	"320 x 480"=>'79633',
+	"1024 x 768"=>'79633',
+	
+	'"480 x 320"'=> '79633',
+    '"1024 x 768"' => '79633',
+    '"768 x 1024"' => '79633',
+    '"320 x 480"' => '79633',
+    '"320 x 50"' => '79637',
     );
 
     $arrayCorrespondance2 = array(
@@ -28,6 +36,10 @@ $arrayCorrespondance = array(
         '768x1024' => 'INTERSTITIEL',
         '320x480' => 'INTERSTITIEL',
         '320x50' => 'MASTHEAD',
+		"768 x 1024"=>'INTERSTITIEL',
+		"320 x 480"=>'INTERSTITIEL',
+		"1024 x 768"=>'INTERSTITIEL',
+		"480 x 320"=> 'INTERSTITIEL',
         '"768x1024 - PORSCHE"'=>'INTERSTITIEL',
         '"768x1024 - ETNIA"'=>'INTERSTITIEL',
         '"480x320 - PORSCHE"'=>'INTERSTITIEL',
@@ -36,7 +48,6 @@ $arrayCorrespondance = array(
         '"480x320 - ETNIA"'=>'INTERSTITIEL',
         '"1024x768 - ETNIA"'=>'INTERSTITIEL',
         '"1024x768 - PORSCHE"'=>'INTERSTITIEL'
-
     
         );
 
@@ -47,7 +58,8 @@ $arrayCorrespondance = array(
 
        
 foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
-    $myObj = array();
+
+$myObj = array();
     echo "$file_csv occupe " . filesize($file_csv) . "<br />\n";
 
     preg_match('/campaignID-([0-9]+)/', $file_csv, $matches);
@@ -90,16 +102,17 @@ foreach (glob('data/csv/'.date('Y/m/d').'/*.csv') as $file_csv) :
                         $sumAll[] = $item[9]; 
                         $clicksAll[] = $item[10];
 
-                       //---  var_dump($item[5]); var_dump($arrayCorrespondance[$item[5]]); exit;
+                        // var_dump($item[5]); var_dump($arrayCorrespondance[$item[5]]); exit;
+                        // var_dump($item[6]); var_dump($arrayCorrespondance[$item[6]]); exit;
 
                         // si le format est un INTERSTITIEL
-                        if ($arrayCorrespondance[$item[5]] === "79633") {
+                        if ($arrayCorrespondance[$item[6]] === "79633") {
                              //on recupére et on fait la somme global impression/click de l'INTERSTITIEL
                             $sumInterstitielImpressions[] = $item[9];           
                             $sumInterstitielClicks[] = $item[10];
                         }
 
-                        if ($arrayCorrespondance[$item[5]] === "79637") { 
+                        if ($arrayCorrespondance[$item[6]] === "79637") { 
                              //on recupére et on fait la somme global impression/click de l'MASTHEAD
                             $sumMastheadImpressions[] = $item[9];
                             $sumMastheadClicks[] = $item[10];
